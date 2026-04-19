@@ -1,3 +1,3 @@
-"""WorkflowBench — Lightweight benchmark harness for AI-driven business workflows."""
+"""WorkflowBench - Lightweight benchmark harness for AI-driven business workflows."""
 
 __version__ = "0.1.0"

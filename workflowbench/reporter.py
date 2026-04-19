@@ -1,4 +1,4 @@
-"""Report generators — HTML and Markdown."""
+"""Report generators - HTML and Markdown."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from workflowbench.runner import BenchmarkRun
 # ---------------------------------------------------------------------------
 
 _MD_TEMPLATE = """\
-# WorkflowBench Report — {{ run.run_id }}
+# WorkflowBench Report - {{ run.run_id }}
 
 **Adapter:** {{ run.adapter_name }}
 **Timestamp:** {{ run.timestamp }}
@@ -78,7 +78,7 @@ _HTML_TEMPLATE = """\
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WorkflowBench Report — {{ run.run_id }}</title>
+<title>WorkflowBench Report - {{ run.run_id }}</title>
 <style>
   :root { --pass: #22c55e; --fail: #ef4444; --bg: #f8fafc; --card: #fff; --border: #e2e8f0; --text: #1e293b; }
   * { box-sizing: border-box; margin: 0; padding: 0; }

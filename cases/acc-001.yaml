@@ -1,7 +1,7 @@
 id: acc-001
 name: Standard developer access request
 category: access
-description: Developer requests access to a staging environment—standard approval flow.
+description: Developer requests access to a staging environment-standard approval flow.
 difficulty: easy
 tags: [access, provisioning, happy-path]
 

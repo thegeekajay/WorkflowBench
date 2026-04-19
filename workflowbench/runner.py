@@ -1,4 +1,4 @@
-"""Runner — orchestrates case execution and scoring."""
+"""Runner - orchestrates case execution and scoring."""
 
 from __future__ import annotations
 

@@ -1,7 +1,7 @@
 id: not-002
 name: SLA breach notification
 category: notifications
-description: Support ticket about to breach SLA—notify team lead and reassign.
+description: Support ticket about to breach SLA-notify team lead and reassign.
 difficulty: medium
 tags: [notifications, SLA, support]
 

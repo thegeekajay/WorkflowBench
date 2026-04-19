@@ -1,4 +1,4 @@
-"""Comparison mode — diff two benchmark runs."""
+"""Comparison mode - diff two benchmark runs."""
 
 from __future__ import annotations
 
@@ -107,7 +107,7 @@ _COMPARE_MD = """\
 | Metric | Run A | Run B | Delta |
 |--------|-------|-------|-------|
 | Overall score | {{ (cmp.overall_a * 100) | round(1) }}% | {{ (cmp.overall_b * 100) | round(1) }}% | {{ "%+.1f" | format(cmp.overall_delta * 100) }}% |
-| Pass rate | {{ (cmp.pass_rate_a * 100) | round(1) }}% | {{ (cmp.pass_rate_b * 100) | round(1) }}% | — |
+| Pass rate | {{ (cmp.pass_rate_a * 100) | round(1) }}% | {{ (cmp.pass_rate_b * 100) | round(1) }}% | - |
 
 {% if cmp.regressions %}
 ## Regressions ({{ cmp.regressions | length }})

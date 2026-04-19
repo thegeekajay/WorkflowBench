@@ -1,7 +1,7 @@
 id: apr-004
 name: Expense with missing receipt
 category: approvals
-description: Expense submitted without required receipt—should not be approved.
+description: Expense submitted without required receipt-should not be approved.
 difficulty: medium
 tags: [approvals, expense, compliance]
 

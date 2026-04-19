@@ -13,7 +13,7 @@ Changes staged for the next release will appear here.
 
 ---
 
-## [0.1.0] — 2026-04-19
+## [0.1.0] - 2026-04-19
 
 Initial public release of WorkflowBench.
 
@@ -23,22 +23,22 @@ Initial public release of WorkflowBench.
 - `WorkflowCase` dataclass with YAML loader (`workflowbench/schema.py`). Supports `id`, `name`, `category`, `context`, `input`, `expected_outcome`, `escalation_expected`, `escalation_reason`, `forbidden_actions`, `required_actions`, `tags`, `difficulty`, and `metadata` fields.
 - `BenchmarkRun` dataclass capturing run-level aggregates: overall score, pass rate, latency, cost, and failure clusters.
 - Deterministic scoring pipeline (`workflowbench/scorers.py`) with four dimensions:
-  - **Completion** (35%) — phrase matching against `expected_outcome`
-  - **Escalation** (25%) — keyword detection vs. `escalation_expected`
-  - **Forbidden actions** (25%) — hard guardrail check
-  - **Required actions** (15%) — partial-credit phrase presence check
+  - **Completion** (35%) - phrase matching against `expected_outcome`
+  - **Escalation** (25%) - keyword detection vs. `escalation_expected`
+  - **Forbidden actions** (25%) - hard guardrail check
+  - **Required actions** (15%) - partial-credit phrase presence check
 - Pass threshold: overall score ≥ 70% **and** zero forbidden action violations.
 
 **Adapters** (`workflowbench/adapters.py`)
-- `echo` — returns prompt verbatim; zero cost, works offline
-- `openai` — OpenAI Chat Completions API (requires `OPENAI_API_KEY`); default model `gpt-4o-mini`
-- `anthropic` — Anthropic Messages API (requires `ANTHROPIC_API_KEY`); default model `claude-3-5-haiku-20241022`
+- `echo` - returns prompt verbatim; zero cost, works offline
+- `openai` - OpenAI Chat Completions API (requires `OPENAI_API_KEY`); default model `gpt-4o-mini`
+- `anthropic` - Anthropic Messages API (requires `ANTHROPIC_API_KEY`); default model `claude-3-5-haiku-20241022`
 - `BaseAdapter` base class for custom adapter implementations
 
 **CLI** (`workflowbench/cli.py` via `click`)
-- `workflowbench run` — execute a benchmark suite against an adapter; outputs HTML, Markdown, and/or JSON reports
-- `workflowbench validate` — load and validate YAML cases without running model calls
-- `workflowbench compare` — diff two JSON run files; surfaces regressions and improvements
+- `workflowbench run` - execute a benchmark suite against an adapter; outputs HTML, Markdown, and/or JSON reports
+- `workflowbench validate` - load and validate YAML cases without running model calls
+- `workflowbench compare` - diff two JSON run files; surfaces regressions and improvements
 
 **Reports** (`workflowbench/reporter.py`)
 - HTML report with summary header, score card grid, per-case table, and failure clusters
@@ -46,8 +46,8 @@ Initial public release of WorkflowBench.
 - JSON run file for CI pipelines and programmatic comparison
 
 **Comparison** (`workflowbench/compare.py`)
-- `compare_runs()` — computes per-case deltas, regressions, and improvements
-- `render_comparison_md()` — renders a human-readable markdown diff
+- `compare_runs()` - computes per-case deltas, regressions, and improvements
+- `render_comparison_md()` - renders a human-readable markdown diff
 
 **Sample cases** (`cases/`)
 - 20 enterprise-style YAML workflow cases across six categories:
@@ -62,22 +62,22 @@ Initial public release of WorkflowBench.
 - Landing page (`index.html`) with dark/light mode toggle, logo swap, and benchmark flow infographic
 - Developer documentation page (`docs.html`) with full CLI reference, schema field guide, scoring internals, adapter writing guide, and GitHub Actions CI example
 - `assets/` folder containing SVG and PNG logo variants:
-  - `workflowbench_logo_primary.svg` — for light backgrounds
-  - `workflowbench_logo_dark.svg` — for dark backgrounds
-  - `workflowbench_logo_mark.svg` — app icon and favicon
-  - `style.css` — shared stylesheet extracted from the landing page
+  - `workflowbench_logo_primary.svg` - for light backgrounds
+  - `workflowbench_logo_dark.svg` - for dark backgrounds
+  - `workflowbench_logo_mark.svg` - app icon and favicon
+  - `style.css` - shared stylesheet extracted from the landing page
 - `CHANGELOG.md` (this file)
 
 **Demo & scripts**
-- `scripts/generate_demo.py` — generates "good" vs "bad" agent demo reports in `demo_reports/`
+- `scripts/generate_demo.py` - generates "good" vs "bad" agent demo reports in `demo_reports/`
 - Pre-generated demo reports included for reference
 
 **Tests** (`tests/`)
-- `test_schema.py` — YAML loading, required field validation, `to_prompt()` output
-- `test_scorers.py` — unit tests for all four scoring dimensions
-- `test_runner.py` — end-to-end run with echo adapter
-- `test_reporter.py` — HTML and Markdown report generation
-- `test_compare.py` — comparison run diffing
+- `test_schema.py` - YAML loading, required field validation, `to_prompt()` output
+- `test_scorers.py` - unit tests for all four scoring dimensions
+- `test_runner.py` - end-to-end run with echo adapter
+- `test_reporter.py` - HTML and Markdown report generation
+- `test_compare.py` - comparison run diffing
 
 **Project configuration**
 - `pyproject.toml` with setuptools build, entry point `workflowbench`, and optional `[dev]` extras (`pytest`, `pytest-cov`, `ruff`)

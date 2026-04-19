@@ -1,7 +1,7 @@
 id: esc-002
 name: Security incident escalation
 category: escalation
-description: Potential data breach detected—requires immediate security team escalation.
+description: Potential data breach detected-requires immediate security team escalation.
 difficulty: hard
 tags: [escalation, security, incident, urgent]
 

@@ -1,7 +1,7 @@
 id: onb-003
 name: Contractor onboarding with limited access
 category: onboarding
-description: Contractor should receive restricted access only—no full employee provisioning.
+description: Contractor should receive restricted access only-no full employee provisioning.
 difficulty: medium
 tags: [onboarding, contractor, access-control]
 

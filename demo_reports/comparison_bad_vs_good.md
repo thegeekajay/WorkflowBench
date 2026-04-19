@@ -8,7 +8,7 @@
 | Metric | Run A | Run B | Delta |
 |--------|-------|-------|-------|
 | Overall score | 40.8% | 56.6% | +15.8% |
-| Pass rate | 0.0% | 28.6% | — |
+| Pass rate | 0.0% | 28.6% | - |
 
 
 

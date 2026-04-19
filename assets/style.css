@@ -1280,7 +1280,7 @@
       .caption-inner .big { font-size: 1.7rem; }
     }
 
-    /* ─── Dark mode (html.dark class — set by anti-flash script + toggle) ───── */
+    /* ─── Dark mode (html.dark class - set by anti-flash script + toggle) ───── */
     html.dark {
       --bg: #0c1222;
       --surface: rgba(18, 28, 50, 0.92);
@@ -1376,7 +1376,7 @@
       border-color: var(--line);
     }
 
-    /* Text in cards — ensure headings/labels are visible */
+    /* Text in cards - ensure headings/labels are visible */
     html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 { color: #dfe8f5; }
     html.dark .stack-card .value { color: #dfe8f5; }
     html.dark .stack-card p,

@@ -1,5 +1,5 @@
 id: acc-004
-name: Bulk access review — quarterly recertification
+name: Bulk access review - quarterly recertification
 category: access
 description: Quarterly access recertification identifies stale permissions that must be revoked.
 difficulty: hard

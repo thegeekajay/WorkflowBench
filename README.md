@@ -7,7 +7,7 @@
 
 **Test AI workflows before they break in production.**
 
-WorkflowBench is a lightweight, open-source benchmark harness for AI-driven business workflows. Define realistic scenarios in YAML—onboarding, approvals, policy acknowledgment, access requests, escalation handling—then run prompts or agents against them and get deterministic scores for correctness, escalation behavior, compliance, latency, and cost.
+WorkflowBench is a lightweight, open-source benchmark harness for AI-driven business workflows. Define realistic scenarios in YAML-onboarding, approvals, policy acknowledgment, access requests, escalation handling-then run prompts or agents against them and get deterministic scores for correctness, escalation behavior, compliance, latency, and cost.
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
@@ -214,9 +214,9 @@ ADAPTERS["my-agent"] = MyAdapter
 
 WorkflowBench generates three output formats:
 
-- **HTML** — visual dashboard with score cards, per-case table, and failure clusters
-- **Markdown** — text-based summary for PRs, wikis, and docs
-- **JSON** — machine-readable for CI pipelines and comparisons
+- **HTML** - visual dashboard with score cards, per-case table, and failure clusters
+- **Markdown** - text-based summary for PRs, wikis, and docs
+- **JSON** - machine-readable for CI pipelines and comparisons
 
 ### Demo reports
 
@@ -317,4 +317,4 @@ MIT
 
 ---
 
-**WorkflowBench** — from demo success to production confidence.
+**WorkflowBench** - from demo success to production confidence.

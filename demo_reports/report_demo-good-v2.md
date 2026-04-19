@@ -1,4 +1,4 @@
-# WorkflowBench Report — demo-good-v2
+# WorkflowBench Report - demo-good-v2
 
 **Adapter:** mock/good-agent-v2
 **Timestamp:** 2026-04-19T04:19:20.519098+00:00

@@ -1,5 +1,5 @@
 id: esc-003
-name: No escalation needed — routine support ticket
+name: No escalation needed - routine support ticket
 category: escalation
 description: Standard support question that should NOT be escalated. Tests false-positive control.
 difficulty: easy

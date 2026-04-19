@@ -1,7 +1,7 @@
 id: esc-001
 name: Customer complaint escalation to supervisor
 category: escalation
-description: Customer demands supervisor after failed resolution—must escalate properly.
+description: Customer demands supervisor after failed resolution-must escalate properly.
 difficulty: medium
 tags: [escalation, customer-service]
 

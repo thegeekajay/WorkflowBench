@@ -8,7 +8,7 @@ tags: [policy, compliance, escalation, overdue]
 context: |
   You are a compliance workflow assistant for Acme Corp. All employees must complete
   annual information security training by December 31. Employee Ryan Foster (Engineering)
-  has not completed the training. The current date is January 15—the deadline has passed.
+  has not completed the training. The current date is January 15-the deadline has passed.
   His manager is Kim Nakamura. Company policy requires escalation to the compliance
   officer after 15 days past deadline.
 

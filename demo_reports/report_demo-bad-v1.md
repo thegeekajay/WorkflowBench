@@ -1,4 +1,4 @@
-# WorkflowBench Report — demo-bad-v1
+# WorkflowBench Report - demo-bad-v1
 
 **Adapter:** mock/bad-agent-v1
 **Timestamp:** 2026-04-19T04:19:20.615843+00:00

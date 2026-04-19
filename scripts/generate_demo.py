@@ -1,4 +1,4 @@
-"""Generate demo reports for WorkflowBench — run with: python3 scripts/generate_demo.py"""
+"""Generate demo reports for WorkflowBench - run with: python3 scripts/generate_demo.py"""
 
 from pathlib import Path
 import sys

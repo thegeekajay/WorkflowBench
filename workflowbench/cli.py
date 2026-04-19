@@ -13,7 +13,7 @@ from workflowbench import __version__
 @click.group()
 @click.version_option(__version__, prog_name="workflowbench")
 def main():
-    """WorkflowBench — benchmark harness for AI-driven business workflows."""
+    """WorkflowBench - benchmark harness for AI-driven business workflows."""
 
 
 @main.command()
