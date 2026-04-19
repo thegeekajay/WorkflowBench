@@ -49,6 +49,17 @@
           cta.style.opacity = 1;
         }, 600);
       }
+      // Smooth scroll for scroll-indicator
+      var scrollArrow = document.getElementById('scroll-indicator');
+      if (scrollArrow) {
+        scrollArrow.addEventListener('click', function(e) {
+          e.preventDefault();
+          var target = document.getElementById('why');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      }
     });
   </script>
   <style>
@@ -146,7 +157,10 @@
               <span class="metric-chip"><strong>HTML + Markdown</strong> shareable reports</span>
               <span class="metric-chip"><strong>Deterministic</strong> test-like scoring</span>
             </div>
-            <div class="scroll-indicator">↓</div>
+            <div style="margin-top:22px; text-align:left;">
+              <a href="demo_reports/report_demo-good-v2.html" target="_blank" style="font-size:1.04em; color:var(--blue); text-decoration:underline; opacity:0.85;">See a sample benchmark report →</a>
+            </div>
+            <a href="#why" class="scroll-indicator" id="scroll-indicator" aria-label="Scroll to Why section">↓</a>
           </div>
           <aside class="hero-side" aria-label="WorkflowBench snapshot">
             <div class="side-stack">
