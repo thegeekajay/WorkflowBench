@@ -1,228 +1,581 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkflowBench — Test AI Workflows Before They Break in Production</title>
-    <meta name="description" content="Lightweight open-source benchmark harness for AI-driven business workflows. YAML scenarios, deterministic scoring, shareable reports.">
-    <style>
-        :root {
-            --primary: #0f172a;
-            --accent: #3b82f6;
-            --accent-light: #eff6ff;
-            --pass: #22c55e;
-            --fail: #ef4444;
-            --bg: #ffffff;
-            --bg-alt: #f8fafc;
-            --border: #e2e8f0;
-            --text: #1e293b;
-            --text-muted: #64748b;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; color: var(--text); line-height: 1.6; }
-        a { color: var(--accent); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-
-        /* Hero */
-        .hero { background: var(--primary); color: #fff; padding: 5rem 2rem 4rem; text-align: center; }
-        .hero h1 { font-size: 2.75rem; font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
-        .hero .tagline { font-size: 1.25rem; color: #94a3b8; max-width: 640px; margin: 0 auto 2rem; }
-        .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 1rem; transition: opacity 0.15s; }
-        .btn:hover { opacity: 0.9; text-decoration: none; }
-        .btn-primary { background: var(--accent); color: #fff; }
-        .btn-secondary { background: transparent; color: #fff; border: 1px solid #475569; }
-
-        /* Sections */
-        .section { padding: 4rem 2rem; max-width: 960px; margin: 0 auto; }
-        .section-alt { background: var(--bg-alt); }
-        .section h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
-        .section .subtitle { color: var(--text-muted); text-align: center; max-width: 600px; margin: 0 auto 2.5rem; }
-
-        /* How it works */
-        .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
-        .flow-step { text-align: center; padding: 1.5rem 1rem; }
-        .flow-step .step-num { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 0.75rem; }
-        .flow-step h3 { font-size: 1rem; margin-bottom: 0.375rem; }
-        .flow-step p { font-size: 0.875rem; color: var(--text-muted); }
-
-        /* Features */
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
-        .feature-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
-        .feature-card h3 { font-size: 1.05rem; margin-bottom: 0.375rem; }
-        .feature-card p { font-size: 0.875rem; color: var(--text-muted); }
-
-        /* Code block */
-        .code-block { background: var(--primary); color: #e2e8f0; border-radius: 10px; padding: 1.5rem 2rem; overflow-x: auto; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8125rem; line-height: 1.7; max-width: 720px; margin: 0 auto; }
-        .code-block .comment { color: #64748b; }
-        .code-block .keyword { color: #7dd3fc; }
-        .code-block .string { color: #86efac; }
-
-        /* Scoring */
-        .score-table { width: 100%; border-collapse: collapse; max-width: 640px; margin: 0 auto; }
-        .score-table th, .score-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
-        .score-table th { font-weight: 600; background: var(--bg-alt); }
-
-        /* Categories */
-        .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; text-align: center; }
-        .cat-card { background: var(--accent-light); border-radius: 8px; padding: 1.25rem 0.75rem; }
-        .cat-card .count { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
-        .cat-card .label { font-size: 0.8125rem; color: var(--text-muted); }
-
-        /* CTA */
-        .cta { background: var(--primary); color: #fff; padding: 4rem 2rem; text-align: center; }
-        .cta h2 { font-size: 1.75rem; margin-bottom: 0.5rem; }
-        .cta p { color: #94a3b8; margin-bottom: 1.5rem; }
-
-        /* Footer */
-        footer { padding: 2rem; text-align: center; font-size: 0.8125rem; color: var(--text-muted); border-top: 1px solid var(--border); }
-
-        @media (max-width: 640px) {
-            .hero h1 { font-size: 2rem; }
-            .hero .tagline { font-size: 1.05rem; }
-            .section { padding: 3rem 1.25rem; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkflowBench — Test AI Workflows Before They Break in Production</title>
+  <meta name="description" content="WorkflowBench is an open-source benchmark harness for AI-driven business workflows. Define YAML scenarios, run prompts or agents, and score correctness, escalation, compliance, latency, and cost before rollout." />
+  <link rel="icon" type="image/svg+xml" href="assets/workflowbench_logo_mark.svg" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <script>
+    /* Anti-flash: run before paint to apply correct theme class immediately */
+    (function () {
+      var s = localStorage.getItem('wfb-theme');
+      var d = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (s === 'dark' || (s !== 'light' && d)) document.documentElement.classList.add('dark');
+      /* When no stored pref, keep in sync with system changes */
+      if (!s) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        document.documentElement.classList.toggle('dark', e.matches);
+      });
+    })();
+  </script>
 </head>
 <body>
-
-<!-- Hero -->
-<section class="hero">
-    <h1>WorkflowBench</h1>
-    <p class="tagline">Test AI-driven business workflows before they break in production. YAML scenarios, deterministic scoring, shareable reports.</p>
-    <div class="hero-actions">
-        <a class="btn btn-primary" href="https://github.com/thegeekajay/WorkflowBench">View on GitHub</a>
-        <a class="btn btn-secondary" href="https://github.com/thegeekajay/WorkflowBench#quick-start">Quick Start</a>
+  <div class="page-shell grid-bg">
+    <div class="topbar">
+      <div class="container nav">
+        <a class="brand" href="#top" aria-label="WorkflowBench home">
+          <img class="logo-light" src="assets/workflowbench_logo_primary.svg" alt="WorkflowBench" height="44" />
+          <img class="logo-dark"  src="assets/workflowbench_logo_dark.svg"    alt="WorkflowBench" height="44" />
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#why">Why it matters</a>
+          <a href="#flow">How it works</a>
+          <a href="#coverage">Coverage</a>
+          <a href="#scores">Scoring</a>
+          <a href="#oss">Open source</a>
+          <a href="docs.html" style="font-weight: 700;">Docs</a>
+          <a href="docs.html#changelog" style="font-weight: 700;">Changelog</a>
+          <a href="https://github.com/thegeekajay/WorkflowBench" style="margin-left:8px; padding: 10px 16px; border-radius: 999px; background: var(--blue); color: #fff; font-weight: 700;">GitHub ↗</a>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark / light mode" title="Toggle theme">
+            <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+        </nav>
+      </div>
     </div>
-</section>
 
-<!-- How it works -->
-<section class="section">
-    <h2>How It Works</h2>
-    <p class="subtitle">Define scenarios. Run your AI. Score the results. Ship with confidence.</p>
-    <div class="flow">
-        <div class="flow-step">
-            <div class="step-num">1</div>
-            <h3>Define Cases</h3>
-            <p>Write YAML scenarios covering onboarding, approvals, access, escalation, and more.</p>
-        </div>
-        <div class="flow-step">
-            <div class="step-num">2</div>
-            <h3>Run Benchmark</h3>
-            <p>Point the CLI at your model or agent. One command runs the full suite.</p>
-        </div>
-        <div class="flow-step">
-            <div class="step-num">3</div>
-            <h3>Score Results</h3>
-            <p>Deterministic scorers evaluate correctness, escalation, compliance, latency, and cost.</p>
-        </div>
-        <div class="flow-step">
-            <div class="step-num">4</div>
-            <h3>Share Report</h3>
-            <p>Get HTML and markdown reports with failure clusters to share with your team.</p>
-        </div>
-        <div class="flow-step">
-            <div class="step-num">5</div>
-            <h3>Compare Runs</h3>
-            <p>Diff benchmark runs to catch regressions before you deploy.</p>
-        </div>
-    </div>
-</section>
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="dot"></span> Open-source benchmark harness for production AI workflows</span>
+            <h1>Test AI workflows before they break in production.</h1>
+            <p>
+              WorkflowBench helps platform teams define realistic workflow scenarios in YAML, run prompts or agents against them,
+              and score correctness, escalation behavior, compliance misses, latency, and cost before rollout.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/thegeekajay/WorkflowBench">View on GitHub ↗</a>
+              <a class="btn btn-secondary" href="#flow">See how it works</a>
+              <a class="btn btn-secondary" href="#oss">Why open source</a>
+            </div>
+            <div class="hero-notes">
+              <span class="metric-chip"><strong>15–20</strong> realistic enterprise-style cases</span>
+              <span class="metric-chip"><strong>HTML + Markdown</strong> shareable reports</span>
+              <span class="metric-chip"><strong>Deterministic</strong> test-like scoring</span>
+            </div>
+          </div>
 
-<!-- Features -->
-<div class="section-alt">
-<section class="section">
-    <h2>Built for Production Teams</h2>
-    <p class="subtitle">Everything you need to benchmark AI workflows without building a research platform.</p>
-    <div class="features-grid">
-        <div class="feature-card">
-            <h3>YAML Case Format</h3>
-            <p>Structured scenarios with context, inputs, expected outcomes, escalation rules, and forbidden actions. Easy to write, review, and version.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Deterministic Scoring</h3>
-            <p>Four scoring dimensions — completion, escalation correctness, forbidden action violations, and required actions — with clear pass/fail criteria.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Provider Agnostic</h3>
-            <p>Built-in adapters for OpenAI and Anthropic. Simple interface to plug in any model, agent, or custom workflow engine.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Failure Clusters</h3>
-            <p>Reports don't just show a score — they group failures by type so you can see systemic issues at a glance.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Comparison Mode</h3>
-            <p>Diff two runs to detect regressions and improvements. Know exactly which cases changed before you ship.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Local-First</h3>
-            <p>No hosted service required. Run benchmarks from your terminal, store results in your repo, own your data.</p>
-        </div>
-    </div>
-</section>
-</div>
+          <aside class="hero-side" aria-label="WorkflowBench snapshot">
+            <div class="side-stack">
+              <div class="stack-card">
+                <div class="label">What teams run</div>
+                <div class="value">YAML cases</div>
+                <p>Onboarding, approvals, policy acknowledgment, access requests, notifications.</p>
+              </div>
+              <div class="stack-card">
+                <div class="label">What gets measured</div>
+                <div class="value">5 signals</div>
+                <p>Correctness, escalation, compliance, latency, and cost in one benchmark run.</p>
+              </div>
+            </div>
 
-<!-- Quick start -->
-<section class="section">
-    <h2>Get Started in 60 Seconds</h2>
-    <p class="subtitle">Install, run, and get a report — no configuration needed.</p>
-    <div class="code-block">
-        <span class="comment"># Install</span><br>
-        pip install -e ".[dev]"<br><br>
-        <span class="comment"># Run with the built-in echo adapter (no API key needed)</span><br>
-        workflowbench run cases/ --adapter echo<br><br>
-        <span class="comment"># Or use OpenAI / Anthropic</span><br>
-        workflowbench run cases/ --adapter openai --model gpt-4o<br><br>
-        <span class="comment"># Compare two runs</span><br>
-        workflowbench compare reports/run_A.json reports/run_B.json
-    </div>
-</section>
+            <div class="code-card">
+              <div class="window-bar">
+                <span class="window-dot"></span>
+                <span class="window-dot"></span>
+                <span class="window-dot"></span>
+                <span>cases/onboarding/new_hire.yaml</span>
+              </div>
+              <pre><code><span class="key">case</span>: onboarding/new_hire
+<span class="key">input</span>:
+  department: Finance
+  region: EU
+<span class="key">rules</span>:
+  - manager_approval
+  - policy_ack_required
+<span class="key">expected</span>:
+  outcome: account_created
+  escalate: false</code></pre>
+            </div>
 
-<!-- Scoring -->
-<div class="section-alt">
-<section class="section">
-    <h2>Scoring System</h2>
-    <p class="subtitle">Transparent, deterministic, and weighted for enterprise workflows.</p>
-    <table class="score-table">
-        <thead>
-            <tr><th>Dimension</th><th>Weight</th><th>What It Checks</th></tr>
-        </thead>
-        <tbody>
-            <tr><td><strong>Completion</strong></td><td>35%</td><td>Expected outcome phrases found in the response</td></tr>
-            <tr><td><strong>Escalation</strong></td><td>25%</td><td>Correct escalation or non-escalation behavior</td></tr>
-            <tr><td><strong>Forbidden Actions</strong></td><td>25%</td><td>No forbidden actions appear in the response</td></tr>
-            <tr><td><strong>Required Actions</strong></td><td>15%</td><td>All required actions present in the response</td></tr>
-        </tbody>
-    </table>
-</section>
-</div>
+            <div class="status-board">
+              <div class="section-kicker">What a benchmark run surfaces</div>
+              <div class="status-list">
+                <div class="status-item"><strong>Prompt v2 → v3 comparison</strong> <span class="pill info">91 / 100 overall</span></div>
+                <div class="status-item"><strong>Escalation drift on access requests</strong> <span class="pill alert">Needs review</span></div>
+                <div class="status-item"><strong>Compliance guardrails still intact</strong> <span class="pill success">Passing</span></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
 
-<!-- Sample cases -->
-<section class="section">
-    <h2>20 Enterprise Scenarios Included</h2>
-    <p class="subtitle">Real workflow patterns across six categories. Ready to run out of the box.</p>
-    <div class="categories">
-        <div class="cat-card"><div class="count">4</div><div class="label">Onboarding</div></div>
-        <div class="cat-card"><div class="count">4</div><div class="label">Approvals</div></div>
-        <div class="cat-card"><div class="count">4</div><div class="label">Policy</div></div>
-        <div class="cat-card"><div class="count">4</div><div class="label">Access</div></div>
-        <div class="cat-card"><div class="count">3</div><div class="label">Escalation</div></div>
-        <div class="cat-card"><div class="count">2</div><div class="label">Notifications</div></div>
-    </div>
-</section>
+      <section class="section" id="why">
+        <div class="container section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-kicker">Why teams need this</div>
+              <h2>Demo success is not launch confidence.</h2>
+            </div>
+            <p>
+              WorkflowBench is built for teams shipping AI into business processes where edge cases, escalation paths, and policy compliance matter.
+              It makes evaluation feel like running tests instead of running a one-off demo.
+            </p>
+          </div>
 
-<!-- CTA -->
-<section class="cta">
-    <h2>From Demo Success to Production Confidence</h2>
-    <p>Stop shipping AI workflows based on vibes. Start benchmarking.</p>
-    <a class="btn btn-primary" href="https://github.com/thegeekajay/WorkflowBench">Get Started on GitHub</a>
-</section>
+          <div class="problem-grid">
+            <div class="problem-card">
+              <div class="icon-badge">01</div>
+              <h3>Anecdotal demos hide failure modes</h3>
+              <p>It is easy to make a workflow look impressive in a happy-path demo. It is much harder to prove it behaves correctly across real cases.</p>
+            </div>
+            <div class="problem-card">
+              <div class="icon-badge">02</div>
+              <h3>Launch decisions need a common scorecard</h3>
+              <p>Engineering managers and solution architects need the same benchmark output to judge readiness, compare versions, and explain tradeoffs.</p>
+            </div>
+            <div class="problem-card">
+              <div class="icon-badge">03</div>
+              <h3>Reliability should be reusable</h3>
+              <p>Open-source workflow cases, deterministic scorers, and local-first reports make it easier for smaller teams to validate quality before rollout.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<!-- Footer -->
-<footer>
-    <p>&copy; 2026 WorkflowBench &middot; MIT License &middot; Built by <a href="https://github.com/thegeekajay">thegeekajay</a></p>
-</footer>
+      <section class="section" id="flow">
+        <div class="container infographic-shell">
+          <div class="infographic-top">
+            <div>
+              <div class="section-kicker">How it works — end to end</div>
+              <h3>WorkflowBench: Test AI Workflows Before They Break in Production</h3>
+              <p>Real workflow scenarios go in. Prompts or agents get exercised. Deterministic scores come out. Leaders get a report they can actually use.</p>
+            </div>
+            <div class="top-pills">
+              <span class="pill info">Local-first</span>
+              <span class="pill info">Provider-agnostic</span>
+              <span class="pill info">Test-like evals</span>
+            </div>
+          </div>
 
+          <div class="infographic-grid">
+
+            <article class="flow-panel">
+              <div class="step-head">
+                <div class="step-num">1</div>
+                <div>
+                  <h4>Real workflow scenarios in YAML</h4>
+                  <p>Enterprise-style cases for onboarding, approvals, policy acknowledgment, access requests, and notifications.</p>
+                </div>
+              </div>
+
+              <div class="yaml-block">
+                <div class="window-bar">
+                  <span class="window-dot"></span>
+                  <span class="window-dot"></span>
+                  <span class="window-dot"></span>
+                  <span>cases/onboarding/new_hire.yaml</span>
+                </div>
+                <pre><code><span class="key">case</span>: onboarding/new_hire
+<span class="key">input</span>:
+  department: Finance
+  region: EU
+<span class="key">rules</span>:
+  - manager_approval
+  - policy_ack_required</code></pre>
+              </div>
+
+              <div class="tiny-label">Example workflow library</div>
+              <div class="workflow-pills">
+                <div class="workflow-pill"><span class="mark"></span><span>Onboarding<small>checklist</small></span></div>
+                <div class="workflow-pill"><span class="mark"></span><span>Approvals<small>decision</small></span></div>
+                <div class="workflow-pill"><span class="mark"></span><span>Policy ack<small>compliance</small></span></div>
+                <div class="workflow-pill"><span class="mark"></span><span>Access reqs<small>permissions</small></span></div>
+                <div class="workflow-pill"><span class="mark"></span><span>Notifications<small>routing</small></span></div>
+              </div>
+            </article>
+
+            <article class="flow-panel">
+              <div class="step-head">
+                <div class="step-num">2</div>
+                <div>
+                  <h4>Agent or prompt execution</h4>
+                  <p>Run the same suite across prompts, models, and agent entrypoints.</p>
+                </div>
+              </div>
+
+              <div class="tab-row">
+                <span class="tab-chip">Prompt v4</span>
+                <span class="tab-chip muted">Agent exec</span>
+              </div>
+
+              <div class="runner-block">
+                <div class="terminal-bar">
+                  <span class="window-dot"></span>
+                  <span class="window-dot"></span>
+                  <span class="window-dot"></span>
+                  <span>workflowbench run cases/ --adapter openai</span>
+                </div>
+                <div class="runner-lines">
+                  <div class="runner-line"><span>▢ onboarding/new_hire PASS</span><span class="signal green"></span></div>
+                  <div class="runner-line"><span>▢ approvals/finance_capex PASS</span><span class="signal green"></span></div>
+                  <div class="runner-line"><span>▢ access/vpn_request ESCALATE</span><span class="signal amber"></span></div>
+                  <div class="runner-line"><span>▢ policy/ack_overdue PASS</span><span class="signal green"></span></div>
+                  <div class="runner-line"><span>▢ notifications/payroll PASS</span><span class="signal green"></span></div>
+                </div>
+              </div>
+
+              <div class="normalizer">
+                <div>
+                  <h5>Normalized interface</h5>
+                  <p>One runner across prompts, models, and agents.</p>
+                </div>
+                <div class="normalizer-icon"><span></span></div>
+              </div>
+            </article>
+
+            <article class="flow-panel">
+              <div class="step-head">
+                <div class="step-num">3</div>
+                <div>
+                  <h4>Scoring across correctness, escalation, compliance, latency, cost</h4>
+                  <p>Weighted signals that expose both benchmark health and failure patterns.</p>
+                </div>
+              </div>
+
+              <div class="summary-block">
+                <div class="summary-top">
+                  <div class="eyeline">Run summary</div>
+                  <div class="summary-value"><strong>91 / 100</strong><span>20 pass</span></div>
+                </div>
+
+                <div class="gauge-grid">
+                  <div class="gauge-card">
+                    <div class="gauge" style="--value:96; --accent: var(--green);"><span>96</span></div>
+                    <h5>Correctness</h5>
+                    <p>Expected outcome quality</p>
+                  </div>
+                  <div class="gauge-card">
+                    <div class="gauge" style="--value:92; --accent: var(--blue);"><span>92</span></div>
+                    <h5>Escalation</h5>
+                    <p>Safe handoffs and routing</p>
+                  </div>
+                  <div class="gauge-card">
+                    <div class="gauge" style="--value:100; --accent: var(--green);"><span>100</span></div>
+                    <h5>Compliance</h5>
+                    <p>Forbidden actions avoided</p>
+                  </div>
+                  <div class="gauge-card">
+                    <div class="gauge" style="--value:84; --accent: var(--amber);"><span>84</span></div>
+                    <h5>Latency</h5>
+                    <p>Runtime impact still visible</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="score-footer">
+                <div>
+                  <h5>Cost</h5>
+                  <p>Per-case estimate with budget visibility.</p>
+                </div>
+                <div class="pill success"><strong>$0.021</strong> within budget</div>
+              </div>
+            </article>
+
+            <article class="flow-panel">
+              <div class="step-head">
+                <div class="step-num">4</div>
+                <div>
+                  <h4>Shareable benchmark report</h4>
+                  <p>Engineers get case-level detail. Leaders get a benchmark summary they can trust.</p>
+                </div>
+              </div>
+
+              <div class="report-block">
+                <div class="report-head">benchmark-report.html</div>
+                <div class="report-body">
+                  <div class="report-mini-grid">
+                    <div class="report-box">
+                      <h5>Overall score</h5>
+                      <div class="report-score"><strong>91</strong><span>/ 100</span></div>
+                    </div>
+                    <div class="report-box">
+                      <h5>Failure clusters</h5>
+                      <div class="cluster-list">
+                        <div class="cluster-item"><span>Escalation</span><span class="bar-track"><span class="bar-fill" style="width: 72%;"></span></span></div>
+                        <div class="cluster-item"><span>Latency</span><span class="bar-track"><span class="bar-fill amber" style="width: 38%;"></span></span></div>
+                        <div class="cluster-item"><span>Compliance</span><span class="bar-track"><span class="bar-fill red" style="width: 19%;"></span></span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="report-box">
+                    <h5>Compare benchmark runs</h5>
+                    <div class="compare-list">
+                      <div class="compare-item"><span>prompt-v1</span><span class="bar-track"><span class="bar-fill gray" style="width: 62%;"></span></span><strong>76</strong></div>
+                      <div class="compare-item"><span>prompt-v2</span><span class="bar-track"><span class="bar-fill" style="width: 88%;"></span></span><strong>91</strong></div>
+                    </div>
+                  </div>
+
+                  <div class="report-box">
+                    <h5>Per-case detail</h5>
+                    <div class="detail-list">
+                      <div class="detail-item"><span>onboarding/new_hire</span><span class="pill success">PASS</span></div>
+                      <div class="detail-item"><span>access/vpn_request</span><span class="pill alert">ESCALATE</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="report-tabs">
+                  <span class="tab-switch active">HTML</span>
+                  <span class="tab-switch">Markdown</span>
+                  <span class="tab-switch">JSON</span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="leader-ribbon">
+            <h4>What leaders care about</h4>
+            <div class="leader-grid">
+              <div class="leader-item">
+                <div class="leader-icon">✓</div>
+                <div>
+                  <h5>Launch readiness</h5>
+                  <p>Go/no-go confidence grounded in reproducible workflow evidence.</p>
+                </div>
+              </div>
+              <div class="leader-item">
+                <div class="leader-icon">↺</div>
+                <div>
+                  <h5>Regression detection</h5>
+                  <p>Catch workflow drift before a prompt, model, or agent change ships.</p>
+                </div>
+              </div>
+              <div class="leader-item">
+                <div class="leader-icon">◇</div>
+                <div>
+                  <h5>Stakeholder trust</h5>
+                  <p>Reports that translate technical quality into launch-level confidence.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="coverage">
+        <div class="container section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-kicker">Production-style coverage</div>
+              <h2>Enterprise workflows that feel real, not synthetic.</h2>
+            </div>
+            <p>
+              The sample suite is designed around common business processes where correctness and escalation behavior matter more than chatbot polish.
+            </p>
+          </div>
+
+          <div class="workflow-grid">
+            <div class="workflow-card">
+              <div class="icon-badge">HR</div>
+              <h3>Onboarding</h3>
+              <p>Validate identity, create accounts, route approvals, and confirm region-specific policy steps.</p>
+              <ul>
+                <li>New hire creation</li>
+                <li>Department-specific checklists</li>
+                <li>Policy acknowledgment required</li>
+              </ul>
+            </div>
+            <div class="workflow-card">
+              <div class="icon-badge">AP</div>
+              <h3>Approvals</h3>
+              <p>Test financial thresholds, manager routing, and escalation logic when approvals are ambiguous or missing.</p>
+              <ul>
+                <li>Capex approval routing</li>
+                <li>Threshold-based decisions</li>
+                <li>Safe escalation paths</li>
+              </ul>
+            </div>
+            <div class="workflow-card">
+              <div class="icon-badge">PL</div>
+              <h3>Policy acknowledgment</h3>
+              <p>Ensure workflows respect compliance requirements when reminders, overdue states, or exceptions appear.</p>
+              <ul>
+                <li>Reminder cadence</li>
+                <li>Overdue handling</li>
+                <li>Forbidden action checks</li>
+              </ul>
+            </div>
+            <div class="workflow-card">
+              <div class="icon-badge">IT</div>
+              <h3>Access requests</h3>
+              <p>Score whether agents grant access correctly, deny risky requests, or escalate when approval is required.</p>
+              <ul>
+                <li>VPN and app access</li>
+                <li>Regional access rules</li>
+                <li>Manager approval required</li>
+              </ul>
+            </div>
+            <div class="workflow-card">
+              <div class="icon-badge">NT</div>
+              <h3>Notifications</h3>
+              <p>Check routing, timing, and wording across operational alerts, payroll notices, and internal reminders.</p>
+              <ul>
+                <li>Stakeholder routing</li>
+                <li>Timing constraints</li>
+                <li>Message correctness</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="scores">
+        <div class="container score-layout">
+          <div class="score-matrix">
+            <div class="section-kicker">Signals that matter</div>
+            <h3>Scoring designed for engineers and managers</h3>
+            <p>WorkflowBench favors deterministic evaluation wherever possible so benchmark results stay reproducible and actionable.</p>
+
+            <div class="score-legend">
+              <div class="legend-item">
+                <strong>Correctness</strong>
+                <span class="bar-track"><span class="bar-fill green" style="width: 96%;"></span></span>
+                <span>expected outcome</span>
+              </div>
+              <div class="legend-item">
+                <strong>Escalation</strong>
+                <span class="bar-track"><span class="bar-fill" style="width: 92%;"></span></span>
+                <span>safe handoffs</span>
+              </div>
+              <div class="legend-item">
+                <strong>Compliance</strong>
+                <span class="bar-track"><span class="bar-fill green" style="width: 100%;"></span></span>
+                <span>forbidden actions</span>
+              </div>
+              <div class="legend-item">
+                <strong>Latency</strong>
+                <span class="bar-track"><span class="bar-fill amber" style="width: 84%;"></span></span>
+                <span>runtime tradeoff</span>
+              </div>
+              <div class="legend-item">
+                <strong>Cost</strong>
+                <span class="bar-track"><span class="bar-fill gray" style="width: 68%;"></span></span>
+                <span>budget visibility</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="oss-panel">
+            <div class="section-kicker">What ships in the MVP</div>
+            <h3>Built to be local-first, small-team friendly, and easy to extend</h3>
+            <p>The project structure keeps workflow cases, adapters, scorers, and reports separated so teams can compare providers without rewriting tests.</p>
+
+            <div class="oss-grid">
+              <div class="mini-panel">
+                <div class="tiny-label">Case schema</div>
+                <strong>YAML scenarios</strong>
+                <p>Expected outcomes, escalation rules, forbidden actions, and metadata in a readable format.</p>
+              </div>
+              <div class="mini-panel">
+                <div class="tiny-label">Runner</div>
+                <strong>One CLI command</strong>
+                <p>Benchmark a full suite locally and generate a report in a single run.</p>
+              </div>
+              <div class="mini-panel">
+                <div class="tiny-label">Adapters</div>
+                <strong>Provider-agnostic</strong>
+                <p>Keep the interface stable while swapping prompts, providers, or agent entrypoints.</p>
+              </div>
+              <div class="mini-panel">
+                <div class="tiny-label">Reports</div>
+                <strong>Shareable output</strong>
+                <p>Give engineers case-level detail and leaders a benchmark story they can understand.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="oss">
+        <div class="container section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-kicker">Open-source project positioning</div>
+              <h2>A reliability signal for teams building real AI systems.</h2>
+            </div>
+            <p>
+              WorkflowBench is not trying to be a full eval platform. It is a lightweight benchmark harness that helps smaller teams prove quality before rollout and compare changes over time.
+            </p>
+          </div>
+
+          <div class="benefit-grid">
+            <div class="feature-item">
+              <span>1</span>
+              <div>
+                <strong>Shows engineering depth, not just prompting</strong>
+                <p>It tells a stronger story about systems thinking, launch quality, and operational judgment than a simple chatbot demo.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span>2</span>
+              <div>
+                <strong>Makes launch risk discussable</strong>
+                <p>Benchmark reports expose failure clusters, comparison runs, and workflow-level regressions in a manager-friendly format.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span>3</span>
+              <div>
+                <strong>Useful even without a hosted platform</strong>
+                <p>Teams can define cases locally, run a suite on their own adapters, and still produce reports that are easy to share.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="cta-band">
+          <div>
+            <div class="section-kicker">Start benchmarking</div>
+            <h3>Bring AI workflow evaluation closer to the way engineers already test software.</h3>
+            <p>WorkflowBench runs locally, needs no hosted service, and produces HTML, Markdown, and JSON reports you can share with your entire team. Stop shipping AI workflows on vibes — start benchmarking.</p>
+          </div>
+          <div class="hero-actions" style="margin-top:0;">
+            <a class="btn btn-primary" href="https://github.com/thegeekajay/WorkflowBench">View on GitHub ↗</a>
+            <a class="btn btn-secondary" href="https://github.com/thegeekajay/WorkflowBench#quick-start">Quick Start</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-row">
+        <div>&copy; 2026 WorkflowBench · MIT License · Built by <a href="https://github.com/thegeekajay" style="color: var(--blue);">Ajay Kumar Ganesh</a></div>
+        <div class="footer-links">
+          <a href="#why">Why it matters</a>
+          <a href="#flow">How it works</a>
+          <a href="#coverage">Coverage</a>
+          <a href="#scores">Scoring</a>
+          <a href="docs.html">Documentation</a>
+          <a href="docs.html#changelog">Changelog</a>
+          <a href="https://github.com/thegeekajay/WorkflowBench">GitHub ↗</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('wfb-theme', isDark ? 'dark' : 'light');
+      });
+    })();
+  </script>
 </body>
 </html>

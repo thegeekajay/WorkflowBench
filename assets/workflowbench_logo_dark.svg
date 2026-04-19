@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="760" viewBox="0 0 2400 760">
+  <rect width="2400" height="760" fill="none"/>
+  <g transform="translate(84,166)">
+    <path d="M18 44 L72 202 L126 84 L180 202 L234 44" stroke="#FFFFFF" stroke-width="24" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="286" y="120" width="24" height="82" rx="12" fill="#93C5FD"/>
+    <rect x="330" y="44" width="24" height="158" rx="12" fill="#2563EB"/>
+  </g>
+  <text x="520" y="432" font-family="Inter, DejaVu Sans, Arial, sans-serif" font-size="224" font-weight="700" fill="#FFFFFF" letter-spacing="-5">WorkflowBench</text>
+</svg>

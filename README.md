@@ -1,8 +1,17 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/workflowbench_logo_dark.svg">
+  <img alt="WorkflowBench" src="assets/workflowbench_logo_primary.svg" height="60">
+</picture>
+
 # WorkflowBench
 
 **Test AI workflows before they break in production.**
 
 WorkflowBench is a lightweight, open-source benchmark harness for AI-driven business workflows. Define realistic scenarios in YAML—onboarding, approvals, policy acknowledgment, access requests, escalation handling—then run prompts or agents against them and get deterministic scores for correctness, escalation behavior, compliance, latency, and cost.
+
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
+[![Docs](https://img.shields.io/badge/docs-docs.html-informational)](docs.html)
 
 ---
 
@@ -125,7 +134,7 @@ metadata:
 | `escalation_expected` | bool | no | Whether the case requires escalation |
 | `escalation_reason` | string | no | Why escalation is needed |
 | `forbidden_actions` | list | no | Actions that must NOT appear in the response |
-| `required_actions` | list | no | Actions that MUST appear in the response |
+| `required_actions` | list | no | Actions that MUST appear in response |
 | `tags` | list | no | Tags for filtering |
 | `difficulty` | string | no | easy / medium / hard |
 | `metadata` | dict | no | Arbitrary metadata |
@@ -241,6 +250,11 @@ Output highlights:
 
 ```
 WorkflowBench/
+├── assets/                  # Logos and static assets
+│   ├── workflowbench_logo_primary.svg   # For light backgrounds
+│   ├── workflowbench_logo_dark.svg      # For dark backgrounds
+│   ├── workflowbench_logo_mark.svg      # App icon / favicon
+│   └── style.css            # Shared stylesheet for the website
 ├── workflowbench/
 │   ├── __init__.py          # Package root
 │   ├── schema.py            # YAML case schema and loader
@@ -255,6 +269,9 @@ WorkflowBench/
 ├── scripts/
 │   └── generate_demo.py     # Demo report generator
 ├── demo_reports/            # Generated demo outputs
+├── index.html               # Landing page
+├── docs.html                # Developer documentation
+├── CHANGELOG.md             # Version history and release notes
 ├── pyproject.toml           # Project config and dependencies
 └── README.md
 ```
@@ -273,6 +290,24 @@ python3 -m pytest tests/ -v
 # Lint
 python3 -m ruff check workflowbench/
 ```
+
+---
+
+## Documentation
+
+Full developer documentation is available at [docs.html](docs.html), including:
+- Complete CLI reference
+- Case schema specification
+- Scorer internals and custom scorer guide
+- Adapter writing guide
+- Report format details
+- CI integration examples
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
 
 ---
 

@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkflowBench — Developer Documentation</title>
+  <meta name="description" content="Full developer documentation for WorkflowBench: CLI reference, case schema, scorers, adapters, reports, and CI integration." />
+  <link rel="icon" type="image/svg+xml" href="assets/workflowbench_logo_mark.svg" />
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: rgba(255,255,255,0.88);
+      --line: #d9e2ef;
+      --line-strong: #bfd1ea;
+      --text: #0f172a;
+      --muted: #54657d;
+      --muted-2: #7b8ca6;
+      --blue: #2563eb;
+      --blue-2: #dce8ff;
+      --blue-3: #eff5ff;
+      --green: #16a34a;
+      --green-2: #dcfce7;
+      --amber: #d97706;
+      --amber-2: #fff1d6;
+      --red: #dc2626;
+      --navy: #081327;
+      --sidebar-w: 260px;
+      --topbar-h: 58px;
+      --shadow-soft: 0 4px 24px rgba(15,23,42,0.06);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+
+    /* ── Topbar ─────────────────────────────────────────────────────────── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--topbar-h);
+      background: rgba(244,247,251,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+      gap: 20px;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .topbar-brand img { height: 34px; width: auto; }
+    .topbar-brand .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--blue-3);
+      border: 1px solid var(--blue-2);
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .topbar-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .topbar-links a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .topbar-links a:hover { color: var(--text); background: var(--surface); }
+    .topbar-links a.active { color: var(--blue); background: var(--blue-3); }
+
+    /* ── Layout ─────────────────────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      margin-top: var(--topbar-h);
+      min-height: calc(100vh - var(--topbar-h));
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex: none;
+      position: sticky;
+      top: var(--topbar-h);
+      height: calc(100vh - var(--topbar-h));
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+      background: var(--surface);
+      padding: 24px 0 48px;
+    }
+
+    .sidebar-group {
+      margin-bottom: 8px;
+    }
+
+    .sidebar-label {
+      padding: 10px 20px 6px;
+      font-size: 0.73rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted-2);
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: 8px 20px;
+      font-size: 0.91rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: background 0.14s, color 0.14s, border-color 0.14s;
+    }
+
+    .sidebar-link:hover {
+      background: var(--bg);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .sidebar-link.active {
+      background: var(--blue-3);
+      color: var(--blue);
+      border-left-color: var(--blue);
+      font-weight: 700;
+    }
+
+    .sidebar-link.sub {
+      padding-left: 34px;
+      font-size: 0.88rem;
+    }
+
+    /* ── Content ─────────────────────────────────────────────────────────── */
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 48px 56px 96px;
+      max-width: 900px;
+    }
+
+    /* ── Section anchors ─────────────────────────────────────────────────── */
+    .doc-section {
+      margin-bottom: 72px;
+      scroll-margin-top: calc(var(--topbar-h) + 24px);
+    }
+
+    .doc-section:last-child { margin-bottom: 0; }
+
+    /* ── Typography ─────────────────────────────────────────────────────── */
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 1.08;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      padding-top: 4px;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    p {
+      color: var(--muted);
+      margin-bottom: 14px;
+      max-width: 72ch;
+    }
+
+    p strong { color: var(--text); }
+
+    ul, ol {
+      padding-left: 20px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    li { margin-bottom: 6px; }
+    li strong { color: var(--text); }
+
+    /* ── Divider ─────────────────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 40px 0;
+    }
+
+    /* ── Page intro ─────────────────────────────────────────────────────── */
+    .page-intro {
+      margin-bottom: 48px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .page-intro p {
+      font-size: 1.08rem;
+      margin-bottom: 0;
+    }
+
+    /* ── Section heading ─────────────────────────────────────────────────── */
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #eff5ff, #dde9ff);
+      border: 1px solid var(--line-strong);
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 1.1rem;
+      font-weight: 900;
+      flex: none;
+    }
+
+    /* ── Code ─────────────────────────────────────────────────────────────── */
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.88em;
+      background: #eef2f9;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 2px 6px;
+      color: #1847b9;
+    }
+
+    pre {
+      background: var(--navy);
+      color: #cdd9f0;
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin-bottom: 18px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    .sh-comment { color: #5c7a9e; }
+    .sh-cmd     { color: #7dd3fc; }
+    .sh-str     { color: #86efac; }
+    .sh-flag    { color: #fde68a; }
+    .sh-kw      { color: #c084fc; }
+    .py-kw      { color: #c084fc; }
+    .py-str     { color: #86efac; }
+    .py-cls     { color: #fde68a; }
+    .py-fn      { color: #7dd3fc; }
+    .py-cmt     { color: #5c7a9e; }
+    .yaml-key   { color: #7dd3fc; font-weight: 700; }
+    .yaml-val   { color: #86efac; }
+    .yaml-cmt   { color: #5c7a9e; }
+
+    /* ── Window chrome ─────────────────────────────────────────────────── */
+    .code-block {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 20px;
+      background: var(--navy);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .code-block-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.84rem;
+      color: #8daac8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    .code-dot { width: 10px; height: 10px; border-radius: 999px; background: #374151; }
+
+    .code-block pre {
+      border-radius: 0;
+      border: none;
+      margin: 0;
+      padding: 20px 24px;
+    }
+
+    /* ── Tables ──────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin-bottom: 20px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+
+    thead tr {
+      background: var(--bg);
+      border-bottom: 2px solid var(--line-strong);
+    }
+
+    th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 14px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    td code { font-size: 0.84em; }
+
+    tr:last-child td { border-bottom: none; }
+
+    .req-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.77rem;
+      font-weight: 800;
+      background: #fee2e2;
+      color: var(--red);
+    }
+
+    .opt-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.77rem;
+      font-weight: 800;
+      background: var(--bg);
+      color: var(--muted-2);
+      border: 1px solid var(--line);
+    }
+
+    /* ── Callouts ─────────────────────────────────────────────────────────── */
+    .callout {
+      display: flex;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      margin-bottom: 18px;
+      border: 1px solid;
+    }
+
+    .callout-icon { font-size: 1.1rem; flex: none; line-height: 1.5; }
+
+    .callout p { margin: 0; font-size: 0.93rem; }
+
+    .callout.info   { background: var(--blue-3);  border-color: var(--blue-2);  }
+    .callout.info   p { color: #1e40af; }
+    .callout.warn   { background: var(--amber-2); border-color: #fbbf24; }
+    .callout.warn   p { color: #92400e; }
+    .callout.tip    { background: var(--green-2); border-color: #86efac; }
+    .callout.tip    p { color: #14532d; }
+
+    /* ── Inline param ─────────────────────────────────────────────────────── */
+    .param-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 12px 20px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+    .param-row:last-child { border-bottom: none; }
+
+    .param-name { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 0.9rem; font-weight: 700; color: var(--text); }
+    .param-desc { color: var(--muted); font-size: 0.93rem; }
+    .param-desc .badges { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+
+    /* ── Score bar ─────────────────────────────────────────────────────────── */
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .score-row-label { width: 160px; font-size: 0.93rem; font-weight: 700; color: var(--text); flex: none; }
+    .score-bar { flex: 1; height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+    .score-fill { height: 100%; border-radius: inherit; background: var(--blue); }
+    .score-fill.green { background: var(--green); }
+    .score-fill.amber { background: var(--amber); }
+    .score-pct { width: 44px; text-align: right; font-size: 0.9rem; font-weight: 700; color: var(--muted); flex: none; }
+
+    /* ── Step list ─────────────────────────────────────────────────────────── */
+    .step-list { display: grid; gap: 16px; margin-bottom: 20px; }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #eff5ff, #dde9ff);
+      border: 1px solid var(--line-strong);
+      color: var(--blue);
+      font-weight: 900;
+      font-size: 0.88rem;
+      display: grid;
+      place-items: center;
+      flex: none;
+      margin-top: 2px;
+    }
+
+    .step-body h4 { margin-bottom: 4px; }
+    .step-body p  { margin: 0; font-size: 0.93rem; }
+
+    /* ── Pill ─────────────────────────────────────────────────────────────── */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+    .pill.blue   { color: var(--blue);  background: var(--blue-2);  }
+    .pill.green  { color: var(--green); background: var(--green-2); }
+    .pill.amber  { color: var(--amber); background: var(--amber-2); }
+    .pill.gray   { color: var(--muted); background: #edf2f8; }
+
+    /* ── TOC / breadcrumb ─────────────────────────────────────────────────── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--muted-2);
+      margin-bottom: 22px;
+    }
+    .breadcrumb a { color: var(--blue); font-weight: 600; }
+    .breadcrumb span { color: var(--line-strong); }
+
+    /* ── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .content { padding: 32px 24px 80px; }
+      h1 { font-size: 1.9rem; }
+      h2 { font-size: 1.4rem; }
+    }
+
+    /* ── Logo swap ───────────────────────────────────────────────────────── */
+    .topbar-brand .logo-light { display: block; }
+    .topbar-brand .logo-dark  { display: none; }
+    html.dark .topbar-brand .logo-dark  { display: block; }
+    html.dark .topbar-brand .logo-light { display: none; }
+
+    /* ── Theme toggle ────────────────────────────────────────────────────── */
+    .theme-toggle {
+      width: 36px; height: 36px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,0.85);
+      color: var(--text);
+      cursor: pointer;
+      display: grid; place-items: center;
+      transition: background 0.18s, border-color 0.18s, transform 0.22s;
+      flex: none; padding: 0; margin-left: 4px;
+    }
+    .theme-toggle svg { display: block; }
+    .theme-toggle:hover { background: #fff; border-color: var(--blue); transform: rotate(18deg) scale(1.1); }
+    .theme-toggle .icon-sun  { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+
+    /* ── Dark mode ───────────────────────────────────────────────────────── */
+    html.dark {
+      --bg: #0d1829;
+      --surface: #111e33;
+      --surface-2: rgba(17,30,51,0.9);
+      --line: #1e3050;
+      --line-strong: #2b4370;
+      --text: #dfe8f5;
+      --muted: #8daac8;
+      --muted-2: #6080a0;
+      --blue-2: #1a3260;
+      --blue-3: #111e33;
+      --green-2: #0a2618;
+      --amber-2: #2a1a00;
+      --shadow-soft: 0 4px 24px rgba(0,0,0,0.28);
+    }
+    html.dark body { background: var(--bg); }
+    html.dark .topbar { background: rgba(13,24,41,0.92); border-bottom-color: var(--line); }
+    html.dark .sidebar { background: var(--surface); border-right-color: var(--line); }
+    html.dark .sidebar-link:hover { background: rgba(255,255,255,0.04); }
+    html.dark .sidebar-link.active { background: rgba(37,99,235,0.15); }
+    html.dark code { background: #182a48; border-color: var(--line); color: #93c5fd; }
+    html.dark thead tr { background: #0d1829; }
+    html.dark td { border-color: var(--line); }
+    html.dark .section-icon { background: linear-gradient(180deg, #182a48, #0f1e38); }
+    html.dark .step-num { background: linear-gradient(180deg, #182a48, #0f1e38); }
+    html.dark .req-badge { background: #3b0f0f; color: #fca5a5; }
+    html.dark .opt-badge { background: var(--surface); color: var(--muted-2); border-color: var(--line); }
+    html.dark .callout.info   { background: #0f1e38; border-color: var(--line-strong); }
+    html.dark .callout.info   p { color: #93c5fd; }
+    html.dark .callout.warn   { background: #2a1a00; border-color: #78350f; }
+    html.dark .callout.warn   p { color: #fcd34d; }
+    html.dark .callout.tip    { background: #0a2618; border-color: #166534; }
+    html.dark .callout.tip    p { color: #86efac; }
+    html.dark .score-bar { background: var(--line); }
+    html.dark .topbar-links a:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    html.dark .topbar-links a.active { background: rgba(37,99,235,0.18); }
+    html.dark .theme-toggle { background: rgba(18,28,52,0.9); border-color: var(--line-strong); color: var(--text); }
+    html.dark .theme-toggle:hover { background: rgba(30,48,80,0.95); border-color: var(--blue); }
+    html.dark .theme-toggle .icon-sun  { display: block; }
+    html.dark .theme-toggle .icon-moon { display: none; }
+    html.dark .page-intro { border-bottom-color: var(--line); }
+    html.dark .section-heading { border-bottom-color: var(--line); }
+    html.dark h1, html.dark h2, html.dark h3, html.dark h4 { color: var(--text); }
+    html.dark p strong, html.dark li strong { color: var(--text); }
+  </style>
+  <script>
+    (function () {
+      var s = localStorage.getItem('wfb-theme');
+      var d = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (s === 'dark' || (s !== 'light' && d)) document.documentElement.classList.add('dark');
+      if (!s) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        document.documentElement.classList.toggle('dark', e.matches);
+      });
+    })();
+  </script>
+</head>
+<body>
+
+<!-- ── Topbar ───────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a class="topbar-brand" href="index.html">
+    <img class="logo-light" src="assets/workflowbench_logo_primary.svg" alt="WorkflowBench" height="34" />
+    <img class="logo-dark"  src="assets/workflowbench_logo_dark.svg"    alt="WorkflowBench" height="34" />
+    <span class="badge">DOCS</span>
+  </a>
+  <nav class="topbar-links" aria-label="Site">
+    <a href="index.html">Home</a>
+    <a href="docs.html" class="active">Documentation</a>
+    <a href="#changelog">Changelog</a>
+    <a href="https://github.com/thegeekajay/WorkflowBench">GitHub ↗</a>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark / light mode" title="Toggle theme">
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun"  xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </nav>
+</header>
+
+<div class="layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
+  <nav class="sidebar" aria-label="Docs navigation">
+    <div class="sidebar-group">
+      <div class="sidebar-label">Getting Started</div>
+      <a class="sidebar-link" href="#overview">Overview</a>
+      <a class="sidebar-link" href="#installation">Installation</a>
+      <a class="sidebar-link" href="#quickstart">Quick Start</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-label">CLI Reference</div>
+      <a class="sidebar-link" href="#cli-run"><code>run</code></a>
+      <a class="sidebar-link" href="#cli-validate"><code>validate</code></a>
+      <a class="sidebar-link" href="#cli-compare"><code>compare</code></a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-label">Case Schema</div>
+      <a class="sidebar-link" href="#schema-overview">Schema Overview</a>
+      <a class="sidebar-link" href="#schema-fields">All Fields</a>
+      <a class="sidebar-link" href="#schema-examples">Full Examples</a>
+      <a class="sidebar-link" href="#schema-categories">Categories</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-label">Scoring</div>
+      <a class="sidebar-link" href="#scoring-overview">How Scoring Works</a>
+      <a class="sidebar-link" href="#scoring-dimensions">Dimensions</a>
+      <a class="sidebar-link" href="#scoring-pass">Pass Criteria</a>
+      <a class="sidebar-link" href="#scoring-custom">Custom Scorers</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-label">Adapters</div>
+      <a class="sidebar-link" href="#adapters-builtin">Built-in Adapters</a>
+      <a class="sidebar-link" href="#adapters-custom">Writing a Custom Adapter</a>
+      <a class="sidebar-link" href="#adapters-agent">Agent Adapters</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-label">Reports</div>
+      <a class="sidebar-link" href="#reports-formats">Output Formats</a>
+      <a class="sidebar-link" href="#reports-html">HTML Report</a>
+      <a class="sidebar-link" href="#reports-json">JSON Schema</a>
+      <a class="sidebar-link" href="#reports-compare">Comparison Reports</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-label">Integration</div>
+      <a class="sidebar-link" href="#ci-github">GitHub Actions</a>
+      <a class="sidebar-link" href="#ci-env">Environment Variables</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-label">Project</div>
+      <a class="sidebar-link" href="#project-structure">Project Structure</a>
+      <a class="sidebar-link" href="#contributing">Contributing</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-label">Release Notes</div>
+      <a class="sidebar-link" href="#changelog">Changelog</a>
+      <a class="sidebar-link sub" href="#changelog-0-1-0">v0.1.0</a>
+    </div>
+  </nav>
+
+  <!-- ── Main Content ──────────────────────────────────────────────── -->
+  <main class="content">
+
+    <!-- ─────────────────────────────────────────────── Overview ── -->
+    <div class="page-intro" id="overview">
+      <div class="breadcrumb">
+        <a href="index.html">WorkflowBench</a>
+        <span>/</span>
+        <span>Documentation</span>
+      </div>
+      <h1>Developer Documentation</h1>
+      <p>
+        WorkflowBench is a lightweight, open-source benchmark harness for AI-driven business workflows.
+        This reference covers everything you need to define cases, run suites, interpret scores, write custom adapters, and integrate with CI.
+      </p>
+      <p>
+        <strong>Version:</strong> 0.1.0 &nbsp;&bull;&nbsp;
+        <strong>Python:</strong> 3.9+ &nbsp;&bull;&nbsp;
+        <strong>License:</strong> MIT
+      </p>
+    </div>
+
+    <!-- ──────────────────────────────────────────── Installation ── -->
+    <section class="doc-section" id="installation">
+      <div class="section-heading">
+        <div class="section-icon">↓</div>
+        <h2>Installation</h2>
+      </div>
+
+      <h3>From source (development)</h3>
+      <div class="code-block">
+        <div class="code-block-bar">
+          <span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span>
+          <span>shell</span>
+        </div>
+        <pre><code><span class="sh-comment"># Clone and install in editable mode with dev dependencies</span>
+<span class="sh-cmd">git clone</span> <span class="sh-str">https://github.com/thegeekajay/WorkflowBench.git</span>
+<span class="sh-cmd">cd</span> WorkflowBench
+<span class="sh-cmd">pip install</span> <span class="sh-flag">-e ".[dev]"</span></code></pre>
+      </div>
+
+      <h3>Dependencies</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Package</th><th>Version</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>pyyaml</code></td><td>≥ 6.0</td><td>Load YAML case files</td></tr>
+            <tr><td><code>click</code></td><td>≥ 8.0</td><td>CLI framework</td></tr>
+            <tr><td><code>jinja2</code></td><td>≥ 3.1</td><td>HTML report templating</td></tr>
+            <tr><td><code>openai</code></td><td>≥ 1.0</td><td>OpenAI adapter (optional at runtime)</td></tr>
+            <tr><td><code>anthropic</code></td><td>≥ 0.20</td><td>Anthropic adapter (optional at runtime)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">ℹ</span>
+        <p><code>openai</code> and <code>anthropic</code> packages are installed but only called when you use their respective adapters. The <code>echo</code> adapter works offline with no API keys.</p>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Quick Start ── -->
+    <section class="doc-section" id="quickstart">
+      <div class="section-heading">
+        <div class="section-icon">▶</div>
+        <h2>Quick Start</h2>
+      </div>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Run the echo adapter (no API key required)</h4>
+            <p>The echo adapter returns the prompt verbatim. It confirms your cases load and score correctly without making any real model calls.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Point it at your cases directory</h4>
+            <p>WorkflowBench recursively loads all <code>.yaml</code> files in the path you provide.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Open the generated HTML report</h4>
+            <p>Reports are saved to <code>reports/</code> by default. The HTML report includes per-case scores, failure clusters, and a summary you can share.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-bar">
+          <span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span>
+          <span>shell</span>
+        </div>
+        <pre><code><span class="sh-comment"># Step 1 — validate cases first</span>
+<span class="sh-cmd">workflowbench validate</span> cases/
+
+<span class="sh-comment"># Step 2 — run with echo adapter</span>
+<span class="sh-cmd">workflowbench run</span> cases/ <span class="sh-flag">--adapter echo</span>
+
+<span class="sh-comment"># Step 3 — run with OpenAI gpt-4o</span>
+<span class="sh-cmd">export</span> <span class="sh-str">OPENAI_API_KEY</span>=sk-...
+<span class="sh-cmd">workflowbench run</span> cases/ <span class="sh-flag">--adapter openai --model gpt-4o</span>
+
+<span class="sh-comment"># Step 4 — compare two runs</span>
+<span class="sh-cmd">workflowbench compare</span> reports/run_A.json reports/run_B.json</code></pre>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── CLI: run ── -->
+    <section class="doc-section" id="cli-run">
+      <div class="section-heading">
+        <div class="section-icon">⌘</div>
+        <h2>CLI: <code>workflowbench run</code></h2>
+      </div>
+
+      <p>Executes all cases in a directory against a provider adapter and generates reports.</p>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>usage</span></div>
+        <pre><code>workflowbench run CASES_DIR [OPTIONS]</code></pre>
+      </div>
+
+      <h3>Arguments</h3>
+      <div class="param-row">
+        <div class="param-name">CASES_DIR</div>
+        <div class="param-desc">
+          <div class="badges"><span class="req-badge">required</span></div>
+          Path to a directory (or single file) containing <code>.yaml</code> case files. Loaded recursively.
+        </div>
+      </div>
+
+      <h3>Options</h3>
+      <div class="param-row">
+        <div class="param-name">--adapter, -a</div>
+        <div class="param-desc">
+          <div class="badges"><span class="opt-badge">default: echo</span></div>
+          Adapter name: <code>echo</code>, <code>openai</code>, or <code>anthropic</code>. Custom adapters must be registered before the CLI is invoked.
+        </div>
+      </div>
+      <div class="param-row">
+        <div class="param-name">--model, -m</div>
+        <div class="param-desc">
+          <div class="badges"><span class="opt-badge">optional</span></div>
+          Model name to pass to the adapter. Examples: <code>gpt-4o</code>, <code>gpt-4o-mini</code>, <code>claude-3-5-sonnet-20241022</code>.
+        </div>
+      </div>
+      <div class="param-row">
+        <div class="param-name">--output, -o</div>
+        <div class="param-desc">
+          <div class="badges"><span class="opt-badge">default: reports</span></div>
+          Directory where reports are written. Created if it does not exist.
+        </div>
+      </div>
+      <div class="param-row">
+        <div class="param-name">--run-id</div>
+        <div class="param-desc">
+          <div class="badges"><span class="opt-badge">optional</span></div>
+          Custom string identifier for this run. Defaults to a timestamp. Used in report filenames and JSON.
+        </div>
+      </div>
+      <div class="param-row">
+        <div class="param-name">--format</div>
+        <div class="param-desc">
+          <div class="badges"><span class="opt-badge">default: html md json</span></div>
+          One or more output formats. Repeatable: <code>--format html --format json</code>. Choices: <code>html</code>, <code>md</code>, <code>json</code>.
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── CLI: validate ── -->
+    <section class="doc-section" id="cli-validate">
+      <div class="section-heading">
+        <div class="section-icon">⌘</div>
+        <h2>CLI: <code>workflowbench validate</code></h2>
+      </div>
+
+      <p>Loads and validates all YAML cases without executing any model calls. Useful for pre-commit hooks and CI gating.</p>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>usage</span></div>
+        <pre><code>workflowbench validate CASES_DIR</code></pre>
+      </div>
+
+      <p>Exits with code <code>0</code> on success, <code>1</code> on any schema or parse error. Prints each loaded case ID and name on success.</p>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>output example</span></div>
+        <pre><code>Validated 20 cases:
+  onb-001: New hire standard onboarding [onboarding]
+  onb-002: Onboarding with missing documentation [onboarding]
+  apr-001: Auto-approve small purchase [approvals]
+  ...</code></pre>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── CLI: compare ── -->
+    <section class="doc-section" id="cli-compare">
+      <div class="section-heading">
+        <div class="section-icon">⌘</div>
+        <h2>CLI: <code>workflowbench compare</code></h2>
+      </div>
+
+      <p>Diffs two JSON run files and reports regressions, improvements, and score deltas.</p>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>usage</span></div>
+        <pre><code>workflowbench compare RUN_A RUN_B [--output FILE]</code></pre>
+      </div>
+
+      <div class="param-row">
+        <div class="param-name">RUN_A</div>
+        <div class="param-desc"><div class="badges"><span class="req-badge">required</span></div>Path to the baseline JSON run file.</div>
+      </div>
+      <div class="param-row">
+        <div class="param-name">RUN_B</div>
+        <div class="param-desc"><div class="badges"><span class="req-badge">required</span></div>Path to the candidate JSON run file to compare against the baseline.</div>
+      </div>
+      <div class="param-row">
+        <div class="param-name">--output</div>
+        <div class="param-desc"><div class="badges"><span class="opt-badge">optional</span></div>Write the markdown comparison report to a file instead of stdout.</div>
+      </div>
+
+      <p>The output highlights: overall score delta, per-case score changes, regressions (pass → fail), and improvements (fail → pass).</p>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Schema Overview ── -->
+    <section class="doc-section" id="schema-overview">
+      <div class="section-heading">
+        <div class="section-icon">📄</div>
+        <h2>Case Schema Overview</h2>
+      </div>
+
+      <p>
+        Each benchmark case is a single <code>.yaml</code> file in your <code>cases/</code> directory.
+        Cases describe a realistic workflow scenario, the expected model behavior, and the guardrails that must be respected.
+      </p>
+
+      <p>
+        WorkflowBench uses the <code>WorkflowCase</code> dataclass (<code>workflowbench/schema.py</code>) to load and validate every case.
+        Missing required fields cause a hard error at load time. Unknown fields are silently ignored.
+      </p>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Schema Fields ── -->
+    <section class="doc-section" id="schema-fields">
+      <div class="section-heading">
+        <div class="section-icon">📄</div>
+        <h2>Schema Field Reference</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>string</td>
+              <td><span class="req-badge">required</span></td>
+              <td>Unique case identifier. Convention: <code>&lt;category-prefix&gt;-&lt;NNN&gt;</code> e.g. <code>onb-001</code>.</td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>string</td>
+              <td><span class="req-badge">required</span></td>
+              <td>Human-readable short title shown in reports.</td>
+            </tr>
+            <tr>
+              <td><code>category</code></td>
+              <td>string</td>
+              <td><span class="req-badge">required</span></td>
+              <td>Workflow category. Used for grouping in reports. Built-in: <code>onboarding</code>, <code>approvals</code>, <code>policy</code>, <code>access</code>, <code>escalation</code>, <code>notifications</code>.</td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>string</td>
+              <td><span class="opt-badge">optional</span></td>
+              <td>Longer description of the scenario for documentation purposes. Not sent to the model.</td>
+            </tr>
+            <tr>
+              <td><code>context</code></td>
+              <td>string</td>
+              <td><span class="req-badge">required</span></td>
+              <td>System prompt / background context sent to the model before the task input.</td>
+            </tr>
+            <tr>
+              <td><code>input</code></td>
+              <td>string</td>
+              <td><span class="req-badge">required</span></td>
+              <td>The user message or task description sent to the model.</td>
+            </tr>
+            <tr>
+              <td><code>expected_outcome</code></td>
+              <td>string</td>
+              <td><span class="req-badge">required</span></td>
+              <td>Text describing what a correct response should say or contain. Evaluated by the completion scorer using phrase matching.</td>
+            </tr>
+            <tr>
+              <td><code>escalation_expected</code></td>
+              <td>boolean</td>
+              <td><span class="opt-badge">default: false</span></td>
+              <td>Whether the correct response must include an escalation to a human or manager.</td>
+            </tr>
+            <tr>
+              <td><code>escalation_reason</code></td>
+              <td>string</td>
+              <td><span class="opt-badge">optional</span></td>
+              <td>Explains why escalation is required. Shown in reports for clarity. Not used in scoring.</td>
+            </tr>
+            <tr>
+              <td><code>forbidden_actions</code></td>
+              <td>list[string]</td>
+              <td><span class="opt-badge">optional</span></td>
+              <td>Phrases that must NOT appear in the response. A single match is a hard violation and sets forbidden_action_score to &lt; 1.0.</td>
+            </tr>
+            <tr>
+              <td><code>required_actions</code></td>
+              <td>list[string]</td>
+              <td><span class="opt-badge">optional</span></td>
+              <td>Phrases that MUST appear in the response. Partial credit if some are present.</td>
+            </tr>
+            <tr>
+              <td><code>tags</code></td>
+              <td>list[string]</td>
+              <td><span class="opt-badge">optional</span></td>
+              <td>Free-form tags for filtering and report grouping. Examples: <code>escalation</code>, <code>compliance</code>, <code>I-9</code>.</td>
+            </tr>
+            <tr>
+              <td><code>difficulty</code></td>
+              <td>string</td>
+              <td><span class="opt-badge">default: medium</span></td>
+              <td>Relative case difficulty: <code>easy</code>, <code>medium</code>, <code>hard</code>. Shown in reports; not used in scoring.</td>
+            </tr>
+            <tr>
+              <td><code>metadata</code></td>
+              <td>dict</td>
+              <td><span class="opt-badge">optional</span></td>
+              <td>Arbitrary key-value pairs. Stored in the run JSON. Useful for domain, compliance framework, owner, etc.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Schema Examples ── -->
+    <section class="doc-section" id="schema-examples">
+      <div class="section-heading">
+        <div class="section-icon">📄</div>
+        <h2>Full Case Examples</h2>
+      </div>
+
+      <h3>Escalation case (onboarding)</h3>
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>cases/onb-002.yaml</span></div>
+        <pre><code><span class="yaml-key">id:</span> <span class="yaml-val">onb-002</span>
+<span class="yaml-key">name:</span> <span class="yaml-val">Onboarding with missing documentation</span>
+<span class="yaml-key">category:</span> <span class="yaml-val">onboarding</span>
+<span class="yaml-key">description:</span> <span class="yaml-val">New hire is missing I-9 verification. Should escalate.</span>
+<span class="yaml-key">difficulty:</span> <span class="yaml-val">medium</span>
+<span class="yaml-key">tags:</span> <span class="yaml-val">[onboarding, escalation, compliance]</span>
+
+<span class="yaml-key">context:</span> <span class="yaml-val">|
+  You are an HR onboarding assistant. A new hire's I-9 documents
+  have not been received. Their start date is next Monday.</span>
+
+<span class="yaml-key">input:</span> <span class="yaml-val">|
+  Process the onboarding for the new employee.</span>
+
+<span class="yaml-key">expected_outcome:</span> <span class="yaml-val">|
+  Flag missing I-9 documentation; do not complete onboarding;
+  escalate to HR manager for manual review.</span>
+
+<span class="yaml-key">escalation_expected:</span> <span class="yaml-val">true</span>
+<span class="yaml-key">escalation_reason:</span> <span class="yaml-val">Missing legally required documentation</span>
+
+<span class="yaml-key">forbidden_actions:</span>
+  <span class="yaml-val">- provision system access</span>
+  <span class="yaml-val">- complete onboarding without I-9</span>
+  <span class="yaml-val">- skip document verification</span>
+
+<span class="yaml-key">required_actions:</span>
+  <span class="yaml-val">- escalate</span>
+  <span class="yaml-val">- notify manager</span>
+
+<span class="yaml-key">metadata:</span>
+  <span class="yaml-key">domain:</span> <span class="yaml-val">HR</span>
+  <span class="yaml-key">compliance:</span> <span class="yaml-val">I-9</span></code></pre>
+      </div>
+
+      <h3>Pass-through case (approvals)</h3>
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>cases/apr-001.yaml</span></div>
+        <pre><code><span class="yaml-key">id:</span> <span class="yaml-val">apr-001</span>
+<span class="yaml-key">name:</span> <span class="yaml-val">Auto-approve small purchase under threshold</span>
+<span class="yaml-key">category:</span> <span class="yaml-val">approvals</span>
+<span class="yaml-key">difficulty:</span> <span class="yaml-val">easy</span>
+<span class="yaml-key">tags:</span> <span class="yaml-val">[approvals, finance, auto-approve]</span>
+
+<span class="yaml-key">context:</span> <span class="yaml-val">|
+  You are a procurement approval assistant. Purchases under $500
+  can be auto-approved without manager sign-off.</span>
+
+<span class="yaml-key">input:</span> <span class="yaml-val">|
+  Approve a $120 office supply purchase for the engineering team.</span>
+
+<span class="yaml-key">expected_outcome:</span> <span class="yaml-val">|
+  Approve the purchase. Amount is under the $500 auto-approval threshold.</span>
+
+<span class="yaml-key">escalation_expected:</span> <span class="yaml-val">false</span>
+
+<span class="yaml-key">forbidden_actions:</span>
+  <span class="yaml-val">- reject the purchase</span>
+  <span class="yaml-val">- escalate to manager</span>
+
+<span class="yaml-key">required_actions:</span>
+  <span class="yaml-val">- approve</span></code></pre>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Schema Categories ── -->
+    <section class="doc-section" id="schema-categories">
+      <div class="section-heading">
+        <div class="section-icon">📄</div>
+        <h2>Built-in Categories</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>Prefix</th><th>Count (included)</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>onboarding</code></td><td>onb</td><td>4</td><td>HR onboarding flows: account creation, policy acknowledgment, region-specific rules, missing docs.</td></tr>
+            <tr><td><code>approvals</code></td><td>apr</td><td>4</td><td>Financial and operational approvals: auto-approve thresholds, manager routing, VP escalation, missing receipts.</td></tr>
+            <tr><td><code>policy</code></td><td>pol</td><td>4</td><td>Policy compliance: training completion, overdue states, rollout, whistleblower handling.</td></tr>
+            <tr><td><code>access</code></td><td>acc</td><td>4</td><td>IT access requests: VPN, app permissions, security reviews, termination revocations, recertification.</td></tr>
+            <tr><td><code>escalation</code></td><td>esc</td><td>3</td><td>Complex escalation flows: customer complaints, security incidents, false-positive control.</td></tr>
+            <tr><td><code>notifications</code></td><td>not</td><td>2</td><td>Operational notifications: maintenance windows, SLA breach routing.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Scoring Overview ── -->
+    <section class="doc-section" id="scoring-overview">
+      <div class="section-heading">
+        <div class="section-icon">◎</div>
+        <h2>How Scoring Works</h2>
+      </div>
+
+      <p>
+        WorkflowBench uses <strong>deterministic, keyword-based scoring</strong>. There are no LLM judges or probabilistic evaluations —
+        every score is reproducible given the same response text.
+      </p>
+
+      <p>
+        The final <strong>overall score</strong> is a weighted composite of four dimensions. All scores are in the range 0.0–1.0 (reported as 0–100 in the UI).
+      </p>
+
+      <div style="margin: 24px 0;">
+        <div class="score-row"><div class="score-row-label">Completion (35%)</div><div class="score-bar"><div class="score-fill green" style="width: 96%;"></div></div><div class="score-pct">96</div></div>
+        <div class="score-row"><div class="score-row-label">Escalation (25%)</div><div class="score-bar"><div class="score-fill" style="width: 92%;"></div></div><div class="score-pct">92</div></div>
+        <div class="score-row"><div class="score-row-label">Forbidden (25%)</div><div class="score-bar"><div class="score-fill green" style="width: 100%;"></div></div><div class="score-pct">100</div></div>
+        <div class="score-row"><div class="score-row-label">Required (15%)</div><div class="score-bar"><div class="score-fill amber" style="width: 84%;"></div></div><div class="score-pct">84</div></div>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">ℹ</span>
+        <p><strong>Formula:</strong> <code>overall = 0.35 × completion + 0.25 × escalation + 0.25 × forbidden + 0.15 × required</code></p>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Scoring Dimensions ── -->
+    <section class="doc-section" id="scoring-dimensions">
+      <div class="section-heading">
+        <div class="section-icon">◎</div>
+        <h2>Scoring Dimensions</h2>
+      </div>
+
+      <h3>Completion scorer (35%)</h3>
+      <p>
+        Splits <code>expected_outcome</code> into key phrases (delimited by <code>.</code> or <code>;</code>),
+        then checks how many appear (case-insensitively) in the normalized response.
+        Score = matched phrases / total phrases.
+      </p>
+
+      <h3>Escalation scorer (25%)</h3>
+      <p>
+        Checks whether escalation keywords (<code>escalat</code>, <code>manager</code>, <code>supervisor</code>,
+        <code>human review</code>, <code>manual review</code>) appear in the response, then compares to
+        <code>escalation_expected</code>:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Expected</th><th>Found</th><th>Score</th></tr></thead>
+          <tbody>
+            <tr><td>true</td><td>true</td><td>1.0 ✓</td></tr>
+            <tr><td>false</td><td>false</td><td>1.0 ✓</td></tr>
+            <tr><td>true</td><td>false</td><td>0.0 — missed escalation</td></tr>
+            <tr><td>false</td><td>true</td><td>0.3 — unnecessary escalation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Forbidden action scorer (25%)</h3>
+      <p>
+        Checks whether any phrase in <code>forbidden_actions</code> appears (case-insensitively) in the response.
+        Score = 1.0 − (violations / total forbidden actions).
+        Any single violation contributes to a case failing if it pushes overall below the pass threshold.
+      </p>
+
+      <h3>Required action scorer (15%)</h3>
+      <p>
+        Checks how many phrases in <code>required_actions</code> appear in the response.
+        Score = found / total. Partial credit is awarded.
+        If <code>required_actions</code> is empty, this scorer returns 1.0.
+      </p>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Pass Criteria ── -->
+    <section class="doc-section" id="scoring-pass">
+      <div class="section-heading">
+        <div class="section-icon">◎</div>
+        <h2>Pass Criteria</h2>
+      </div>
+
+      <p>A case is marked <strong>PASS</strong> when <em>both</em> of the following are true:</p>
+      <ul>
+        <li><code>overall_score ≥ 0.70</code> (70 / 100)</li>
+        <li><code>forbidden_action_score == 1.0</code> (zero violations)</li>
+      </ul>
+
+      <p>
+        A case can have a high overall score but still fail if there is any forbidden action violation.
+        This makes forbidden actions a hard guardrail rather than a weighted penalty.
+      </p>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠</span>
+        <p>The 70% threshold is defined in <code>workflowbench/runner.py</code> as <code>PASS_THRESHOLD = 0.70</code>. You can adjust this for your use case, but note it changes the pass/fail count in reports and comparisons.</p>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Custom Scorers ── -->
+    <section class="doc-section" id="scoring-custom">
+      <div class="section-heading">
+        <div class="section-icon">◎</div>
+        <h2>Custom Scorers</h2>
+      </div>
+
+      <p>
+        The scoring pipeline calls four functions in <code>workflowbench/scorers.py</code> and assembles the
+        <code>ScoreResult</code>. To add a custom dimension, extend the <code>score_case</code> function:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>workflowbench/scorers.py</span></div>
+        <pre><code><span class="py-kw">def</span> <span class="py-fn">score_tone</span>(case: WorkflowCase, response_text: str) -> tuple[float, dict]:
+    <span class="py-cmt">"""Example: penalize responses that are dismissive."""</span>
+    dismissive = [<span class="py-str">"not my problem"</span>, <span class="py-str">"can't help"</span>, <span class="py-str">"won't do"</span>]
+    hits = sum(1 <span class="py-kw">for</span> d <span class="py-kw">in</span> dismissive <span class="py-kw">if</span> d <span class="py-kw">in</span> response_text.lower())
+    score = 1.0 <span class="py-kw">if</span> hits == 0 <span class="py-kw">else</span> max(0.0, 1.0 - hits * 0.5)
+    <span class="py-kw">return</span> score, {<span class="py-str">"dismissive_hits"</span>: hits}
+
+<span class="py-cmt"># Then include it in score_case() with a custom weight.</span></code></pre>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">✓</span>
+        <p>All scorer functions share the same signature: <code>(case: WorkflowCase, response_text: str) → tuple[float, dict]</code>. The float is 0.0–1.0. The dict is stored in <code>ScoreResult.details</code> for debugging.</p>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Adapters: built-in ── -->
+    <section class="doc-section" id="adapters-builtin">
+      <div class="section-heading">
+        <div class="section-icon">⚡</div>
+        <h2>Built-in Adapters</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Provider</th><th>API Key</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>echo</code></td>
+              <td>None</td>
+              <td>None</td>
+              <td>Returns the prompt text verbatim. Useful for smoke-testing cases without spending API credits.</td>
+            </tr>
+            <tr>
+              <td><code>openai</code></td>
+              <td>OpenAI</td>
+              <td><code>OPENAI_API_KEY</code></td>
+              <td>Uses the Chat Completions API. Default model: <code>gpt-4o-mini</code>. Pass <code>--model</code> to override.</td>
+            </tr>
+            <tr>
+              <td><code>anthropic</code></td>
+              <td>Anthropic</td>
+              <td><code>ANTHROPIC_API_KEY</code></td>
+              <td>Uses the Messages API. Default model: <code>claude-3-5-haiku-20241022</code>. Pass <code>--model</code> to override.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>All adapters return an <code>AdapterResponse</code> with: <code>text</code>, <code>latency_ms</code>, <code>input_tokens</code>, <code>output_tokens</code>, <code>model</code>, <code>cost_usd</code>.</p>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Adapters: custom ── -->
+    <section class="doc-section" id="adapters-custom">
+      <div class="section-heading">
+        <div class="section-icon">⚡</div>
+        <h2>Writing a Custom Adapter</h2>
+      </div>
+
+      <p>Subclass <code>BaseAdapter</code>, implement <code>name</code> and <code>execute</code>, then register it in the <code>ADAPTERS</code> dict before calling the CLI:</p>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>my_adapter.py</span></div>
+        <pre><code><span class="py-kw">from</span> workflowbench.adapters <span class="py-kw">import</span> BaseAdapter, AdapterResponse, ADAPTERS
+
+<span class="py-kw">class</span> <span class="py-cls">MyAdapter</span>(BaseAdapter):
+    <span class="sh-comment">"""Adapter that calls your own model or agent."""</span>
+
+    <span class="py-kw">@property</span>
+    <span class="py-kw">def</span> <span class="py-fn">name</span>(self) -> str:
+        <span class="py-kw">return</span> <span class="py-str">"my-agent"</span>
+
+    <span class="py-kw">def</span> <span class="py-fn">execute</span>(self, prompt: str, *, case_id: str = <span class="py-str">""</span>) -> AdapterResponse:
+        <span class="py-kw">import</span> time
+        t0 = time.perf_counter()
+
+        result = my_agent.run(prompt)  <span class="py-cmt"># your call here</span>
+
+        <span class="py-kw">return</span> AdapterResponse(
+            text=result.text,
+            latency_ms=(time.perf_counter() - t0) * 1000,
+            input_tokens=result.usage.input_tokens,
+            output_tokens=result.usage.output_tokens,
+            model=<span class="py-str">"my-model-v1"</span>,
+            cost_usd=result.cost,
+        )
+
+<span class="py-cmt"># Register before invoking the CLI</span>
+ADAPTERS[<span class="py-str">"my-agent"</span>] = MyAdapter</code></pre>
+      </div>
+
+      <p>Then run:</p>
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>shell</span></div>
+        <pre><code>workflowbench run cases/ --adapter my-agent</code></pre>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Adapters: agent ── -->
+    <section class="doc-section" id="adapters-agent">
+      <div class="section-heading">
+        <div class="section-icon">⚡</div>
+        <h2>Agent Adapters</h2>
+      </div>
+
+      <p>
+        WorkflowBench is provider-agnostic. An "agent" is anything that accepts a string prompt and returns a string response.
+        Common patterns:
+      </p>
+
+      <ul>
+        <li><strong>LangChain agent</strong> — wrap <code>agent.run(prompt)</code> in <code>execute()</code>.</li>
+        <li><strong>LlamaIndex workflow</strong> — pass the prompt to your query engine.</li>
+        <li><strong>AutoGen / CrewAI</strong> — initiate the task and capture the final output text.</li>
+        <li><strong>HTTP API</strong> — call your internal service endpoint and parse the JSON response.</li>
+      </ul>
+
+      <p>Token counts and cost are optional — pass <code>0</code> if your agent doesn't expose them. Latency is measured by WorkflowBench automatically if you time it yourself, but the runner also records wall-clock time per case.</p>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Reports: formats ── -->
+    <section class="doc-section" id="reports-formats">
+      <div class="section-heading">
+        <div class="section-icon">📊</div>
+        <h2>Output Formats</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Format</th><th>Flag</th><th>Filename</th><th>Best for</th></tr></thead>
+          <tbody>
+            <tr><td>HTML</td><td><code>--format html</code></td><td><code>reports/&lt;run-id&gt;.html</code></td><td>Sharing with stakeholders. Visual score cards, per-case table, failure clusters.</td></tr>
+            <tr><td>Markdown</td><td><code>--format md</code></td><td><code>reports/&lt;run-id&gt;.md</code></td><td>PR descriptions, wikis, Notion. GitHub-native rendering.</td></tr>
+            <tr><td>JSON</td><td><code>--format json</code></td><td><code>reports/&lt;run-id&gt;.json</code></td><td>CI assertion, programmatic diffing, comparison mode input.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Reports: HTML ── -->
+    <section class="doc-section" id="reports-html">
+      <div class="section-heading">
+        <div class="section-icon">📊</div>
+        <h2>HTML Report Structure</h2>
+      </div>
+
+      <p>The HTML report (generated by <code>workflowbench/reporter.py</code>) includes:</p>
+      <ul>
+        <li><strong>Summary header</strong> — run ID, adapter, model, total cases, pass rate, overall score, total latency, total cost.</li>
+        <li><strong>Score card grid</strong> — one card per scoring dimension with values and weights.</li>
+        <li><strong>Case results table</strong> — sortable per-case breakdown with scores for each dimension.</li>
+        <li><strong>Failure clusters</strong> — groups of failed cases by shared category or pattern.</li>
+        <li><strong>Cost &amp; latency overview</strong> — per-case and aggregate token/cost data.</li>
+      </ul>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Reports: JSON ── -->
+    <section class="doc-section" id="reports-json">
+      <div class="section-heading">
+        <div class="section-icon">📊</div>
+        <h2>JSON Run Schema</h2>
+      </div>
+
+      <p>The JSON output contains the full <code>BenchmarkRun</code> object:</p>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>run.json (abbreviated)</span></div>
+        <pre><code>{
+  <span class="py-str">"run_id"</span>: <span class="py-str">"2026-04-19T14:00:00"</span>,
+  <span class="py-str">"adapter"</span>: <span class="py-str">"openai"</span>,
+  <span class="py-str">"model"</span>: <span class="py-str">"gpt-4o"</span>,
+  <span class="py-str">"timestamp"</span>: <span class="py-str">"2026-04-19T14:00:00"</span>,
+  <span class="py-str">"cases_total"</span>: 20,
+  <span class="py-str">"cases_passed"</span>: 18,
+  <span class="py-str">"cases_failed"</span>: 2,
+  <span class="py-str">"pass_rate"</span>: 0.9,
+  <span class="py-str">"overall_score"</span>: 0.91,
+  <span class="py-str">"total_latency_ms"</span>: 14320.5,
+  <span class="py-str">"total_cost_usd"</span>: 0.0421,
+  <span class="py-str">"failure_clusters"</span>: { <span class="py-str">"escalation"</span>: [<span class="py-str">"onb-002"</span>] },
+  <span class="py-str">"results"</span>: [
+    {
+      <span class="py-str">"case_id"</span>: <span class="py-str">"onb-001"</span>,
+      <span class="py-str">"case_name"</span>: <span class="py-str">"New hire standard onboarding"</span>,
+      <span class="py-str">"category"</span>: <span class="py-str">"onboarding"</span>,
+      <span class="py-str">"passed"</span>: true,
+      <span class="py-str">"completion_score"</span>: 0.95,
+      <span class="py-str">"escalation_score"</span>: 1.0,
+      <span class="py-str">"forbidden_action_score"</span>: 1.0,
+      <span class="py-str">"required_action_score"</span>: 0.85,
+      <span class="py-str">"overall_score"</span>: 0.96,
+      <span class="py-str">"latency_ms"</span>: 742.3,
+      <span class="py-str">"cost_usd"</span>: 0.0021,
+      <span class="py-str">"input_tokens"</span>: 312,
+      <span class="py-str">"output_tokens"</span>: 187,
+      <span class="py-str">"model"</span>: <span class="py-str">"gpt-4o"</span>
+    }
+  ]
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Reports: compare ── -->
+    <section class="doc-section" id="reports-compare">
+      <div class="section-heading">
+        <div class="section-icon">📊</div>
+        <h2>Comparison Reports</h2>
+      </div>
+
+      <p>
+        <code>workflowbench compare run_a.json run_b.json</code> produces a markdown diff that shows:
+      </p>
+      <ul>
+        <li>Overall score delta between run A and run B</li>
+        <li>Per-case score changes (sorted by magnitude)</li>
+        <li><strong>Regressions</strong>: cases that were passing in A but failing in B</li>
+        <li><strong>Improvements</strong>: cases that were failing in A but passing in B</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>shell — save to file</span></div>
+        <pre><code>workflowbench compare reports/run_before.json reports/run_after.json \
+  --output reports/comparison.md</code></pre>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── CI: GitHub Actions ── -->
+    <section class="doc-section" id="ci-github">
+      <div class="section-heading">
+        <div class="section-icon">⚙</div>
+        <h2>GitHub Actions Integration</h2>
+      </div>
+
+      <p>Run WorkflowBench on every pull request to catch regressions before merge:</p>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>.github/workflows/benchmark.yml</span></div>
+        <pre><code><span class="yaml-key">name:</span> <span class="yaml-val">WorkflowBench</span>
+
+<span class="yaml-key">on:</span>
+  <span class="yaml-key">pull_request:</span>
+    <span class="yaml-key">branches:</span> <span class="yaml-val">[main]</span>
+
+<span class="yaml-key">jobs:</span>
+  <span class="yaml-key">benchmark:</span>
+    <span class="yaml-key">runs-on:</span> <span class="yaml-val">ubuntu-latest</span>
+    <span class="yaml-key">steps:</span>
+      - <span class="yaml-key">uses:</span> <span class="yaml-val">actions/checkout@v4</span>
+
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Set up Python</span>
+        <span class="yaml-key">uses:</span> <span class="yaml-val">actions/setup-python@v5</span>
+        <span class="yaml-key">with:</span>
+          <span class="yaml-key">python-version:</span> <span class="yaml-val">"3.11"</span>
+
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Install WorkflowBench</span>
+        <span class="yaml-key">run:</span> <span class="yaml-val">pip install -e ".[dev]"</span>
+
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Validate cases</span>
+        <span class="yaml-key">run:</span> <span class="yaml-val">workflowbench validate cases/</span>
+
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Run benchmark (echo adapter — no API key)</span>
+        <span class="yaml-key">run:</span> <span class="yaml-val">workflowbench run cases/ --adapter echo --format json</span>
+
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Upload report artifact</span>
+        <span class="yaml-key">uses:</span> <span class="yaml-val">actions/upload-artifact@v4</span>
+        <span class="yaml-key">with:</span>
+          <span class="yaml-key">name:</span> <span class="yaml-val">benchmark-report</span>
+          <span class="yaml-key">path:</span> <span class="yaml-val">reports/</span></code></pre>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">✓</span>
+        <p>For real model runs in CI, add <code>OPENAI_API_KEY</code> as a GitHub Actions secret and pass <code>--adapter openai --model gpt-4o-mini</code>. Use <code>--format json</code> only in CI to keep artifacts small, and run with <code>--format html</code> locally.</p>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── CI: env vars ── -->
+    <section class="doc-section" id="ci-env">
+      <div class="section-heading">
+        <div class="section-icon">⚙</div>
+        <h2>Environment Variables</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Variable</th><th>Used by</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>OPENAI_API_KEY</code></td><td>openai adapter</td><td>OpenAI API key. Required when using <code>--adapter openai</code>.</td></tr>
+            <tr><td><code>ANTHROPIC_API_KEY</code></td><td>anthropic adapter</td><td>Anthropic API key. Required when using <code>--adapter anthropic</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Project Structure ── -->
+    <section class="doc-section" id="project-structure">
+      <div class="section-heading">
+        <div class="section-icon">📁</div>
+        <h2>Project Structure</h2>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>WorkflowBench/</span></div>
+        <pre><code>WorkflowBench/
+├── assets/                          <span class="sh-comment"># Static assets</span>
+│   ├── workflowbench_logo_primary.svg   <span class="sh-comment"># Light background logo</span>
+│   ├── workflowbench_logo_dark.svg      <span class="sh-comment"># Dark background logo</span>
+│   ├── workflowbench_logo_mark.svg      <span class="sh-comment"># App icon / favicon</span>
+│   └── style.css                        <span class="sh-comment"># Shared website stylesheet</span>
+├── workflowbench/
+│   ├── __init__.py                  <span class="sh-comment"># Package root, __version__</span>
+│   ├── schema.py                    <span class="sh-comment"># WorkflowCase dataclass + YAML loader</span>
+│   ├── adapters.py                  <span class="sh-comment"># BaseAdapter + built-in adapters</span>
+│   ├── runner.py                    <span class="sh-comment"># BenchmarkRun + run_benchmark()</span>
+│   ├── scorers.py                   <span class="sh-comment"># score_case() + per-dimension functions</span>
+│   ├── reporter.py                  <span class="sh-comment"># save_html(), save_markdown()</span>
+│   ├── compare.py                   <span class="sh-comment"># compare_runs(), render_comparison_md()</span>
+│   └── cli.py                       <span class="sh-comment"># Click CLI (run / validate / compare)</span>
+├── cases/                           <span class="sh-comment"># 20 sample YAML workflow cases</span>
+├── tests/                           <span class="sh-comment"># pytest test suite</span>
+├── scripts/
+│   └── generate_demo.py             <span class="sh-comment"># Generates demo reports</span>
+├── demo_reports/                    <span class="sh-comment"># Pre-generated demo outputs</span>
+├── index.html                       <span class="sh-comment"># Landing page</span>
+├── docs.html                        <span class="sh-comment"># This documentation page</span>
+├── CHANGELOG.md                     <span class="sh-comment"># Version history</span>
+├── pyproject.toml
+└── README.md</code></pre>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Contributing ── -->
+    <section class="doc-section" id="contributing">
+      <div class="section-heading">
+        <div class="section-icon">🤝</div>
+        <h2>Contributing</h2>
+      </div>
+
+      <h3>Running tests</h3>
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>shell</span></div>
+        <pre><code>python3 -m pytest tests/ -v</code></pre>
+      </div>
+
+      <h3>Linting</h3>
+      <div class="code-block">
+        <div class="code-block-bar"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span>shell</span></div>
+        <pre><code>python3 -m ruff check workflowbench/</code></pre>
+      </div>
+
+      <h3>Adding new cases</h3>
+      <p>
+        New cases go in <code>cases/</code> as <code>.yaml</code> files. Follow the naming convention
+        <code>&lt;prefix&gt;-&lt;NNN&gt;.yaml</code> where <code>NNN</code> is zero-padded (e.g. <code>onb-005.yaml</code>).
+        Run <code>workflowbench validate cases/</code> before submitting.
+      </p>
+
+      <h3>Reporting issues</h3>
+      <p>
+        File bugs and feature requests on <a href="https://github.com/thegeekajay/WorkflowBench/issues" target="_blank">GitHub Issues</a>.
+        When filing a bug, include the WorkflowBench version (<code>workflowbench --version</code>), adapter used, and a minimal YAML case that reproduces the issue.
+      </p>
+    </section>
+
+    <!-- ──────────────────────────────────────────── Changelog ── -->
+    <section class="doc-section" id="changelog">
+      <div class="section-heading">
+        <div class="section-icon">&#9679;</div>
+        <h2>Changelog</h2>
+      </div>
+
+      <p>
+        All notable changes to WorkflowBench are documented here.
+        WorkflowBench follows <a href="https://semver.org/" target="_blank">Semantic Versioning</a>.
+      </p>
+
+      <div style="margin-bottom: 32px;">
+        <span class="pill blue">Latest: v0.1.0</span>
+      </div>
+
+      <!-- ── v0.1.0 ── -->
+      <div id="changelog-0-1-0" style="scroll-margin-top: calc(var(--topbar-h) + 24px);">
+        <div style="display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid var(--line-strong);">
+          <h3 style="margin: 0; font-size: 1.35rem; letter-spacing: -0.03em;">v0.1.0</h3>
+          <span class="pill green">Initial Release</span>
+          <span style="color: var(--muted-2); font-size: 0.88rem; margin-left: auto;">April 19, 2026</span>
+        </div>
+
+        <h4>Core Framework</h4>
+        <ul>
+          <li><code>WorkflowCase</code> dataclass with full YAML loader — supports <code>id</code>, <code>name</code>, <code>category</code>, <code>context</code>, <code>input</code>, <code>expected_outcome</code>, <code>escalation_expected</code>, <code>forbidden_actions</code>, <code>required_actions</code>, <code>tags</code>, <code>difficulty</code>, and <code>metadata</code>.</li>
+          <li><code>BenchmarkRun</code> dataclass capturing run-level aggregates: overall score, pass rate, latency, cost, and failure clusters.</li>
+          <li>Deterministic scoring pipeline with four weighted dimensions — no LLM judges, fully reproducible.</li>
+          <li>Pass threshold: overall score &ge; 70% <strong>and</strong> zero forbidden action violations.</li>
+        </ul>
+
+        <h4 style="margin-top: 18px;">Adapters</h4>
+        <ul>
+          <li><strong>echo</strong> &mdash; returns the prompt verbatim; works offline, no API key required.</li>
+          <li><strong>openai</strong> &mdash; OpenAI Chat Completions API; default model <code>gpt-4o-mini</code>.</li>
+          <li><strong>anthropic</strong> &mdash; Anthropic Messages API; default model <code>claude-3-5-haiku-20241022</code>.</li>
+          <li><code>BaseAdapter</code> base class for writing custom adapters.</li>
+        </ul>
+
+        <h4 style="margin-top: 18px;">CLI</h4>
+        <ul>
+          <li><code>workflowbench run</code> &mdash; execute a suite against an adapter; outputs HTML, Markdown, and/or JSON.</li>
+          <li><code>workflowbench validate</code> &mdash; validate YAML cases without running model calls.</li>
+          <li><code>workflowbench compare</code> &mdash; diff two JSON runs; surfaces regressions and improvements.</li>
+        </ul>
+
+        <h4 style="margin-top: 18px;">Sample Cases (20 included)</h4>
+        <ul>
+          <li><strong>Onboarding</strong> (4) &mdash; new hire, missing I-9 docs, contractor, international hire.</li>
+          <li><strong>Approvals</strong> (4) &mdash; auto-approve threshold, manager routing, VP escalation, missing receipt.</li>
+          <li><strong>Policy</strong> (4) &mdash; training completion, overdue acknowledgment, rollout, whistleblower report.</li>
+          <li><strong>Access</strong> (4) &mdash; VPN request, production security review, termination revocation, recertification.</li>
+          <li><strong>Escalation</strong> (3) &mdash; customer complaint, security incident, false-positive control.</li>
+          <li><strong>Notifications</strong> (2) &mdash; maintenance window, SLA breach.</li>
+        </ul>
+
+        <h4 style="margin-top: 18px;">Reports</h4>
+        <ul>
+          <li>HTML report with summary header, score cards, per-case table, and failure clusters.</li>
+          <li>Markdown report for PR descriptions, wikis, and Notion.</li>
+          <li>JSON run file for CI pipelines and programmatic comparison.</li>
+        </ul>
+
+        <h4 style="margin-top: 18px;">Website &amp; Docs</h4>
+        <ul>
+          <li>Landing page (<code>index.html</code>) with dark/light mode toggle and benchmark flow infographic.</li>
+          <li>Developer documentation (<code>docs.html</code>) with CLI reference, schema guide, scorer internals, and CI examples.</li>
+          <li><code>assets/</code> folder with SVG and PNG logo variants and shared stylesheet.</li>
+        </ul>
+
+        <div class="callout warn" style="margin-top: 22px;">
+          <span class="callout-icon">&#9888;</span>
+          <p><strong>Known limitations in v0.1.0:</strong> Completion scoring uses phrase matching only &mdash; paraphrased responses may be missed. Escalation detection relies on a fixed keyword list. No streaming support. Cases run sequentially.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  /* Highlight active sidebar link based on scroll position */
+  (function () {
+    var links = document.querySelectorAll('.sidebar-link[href^="#"]');
+    var sections = [];
+    links.forEach(function (l) {
+      var id = l.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) sections.push({ el: el, link: l });
+    });
+
+    function onScroll() {
+      var scrollY = window.scrollY + 80;
+      var active = null;
+      sections.forEach(function (s) {
+        if (s.el.offsetTop <= scrollY) active = s;
+      });
+      links.forEach(function (l) { l.classList.remove('active'); });
+      if (active) active.link.classList.add('active');
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  /* Theme toggle */
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('wfb-theme', isDark ? 'dark' : 'light');
+    });
+  })();
+</script>
+</body>
+</html>
