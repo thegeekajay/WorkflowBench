@@ -3,674 +3,694 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WorkflowBench - Test AI Workflows Before They Break in Production</title>
+  <title>WorkflowBench — Test AI Workflows Before They Break in Production</title>
   <meta name="description" content="WorkflowBench is an open-source benchmark harness for AI-driven business workflows. Define YAML scenarios, run prompts or agents, and score correctness, escalation, compliance, latency, and cost before rollout." />
   <link rel="icon" type="image/svg+xml" href="assets/workflowbench_logo_mark.svg" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- GSAP + ScrollTrigger + SplitText -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+  <!-- Lenis smooth scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
   <link rel="stylesheet" href="assets/style.css" />
-  <script>
-    // Theme toggle (existing)
-    (function () {
-      var s = localStorage.getItem('wfb-theme');
-      var d = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (s === 'dark' || (s !== 'light' && d)) document.documentElement.classList.add('dark');
-      if (!s) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-        document.documentElement.classList.toggle('dark', e.matches);
-      });
-    })();
-    // Reveal on scroll
-    document.addEventListener('DOMContentLoaded', function () {
-      function reveal() {
-        document.querySelectorAll('.reveal').forEach(function (el) {
-          var rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight - 80) {
-            el.classList.add('revealed');
-          }
-        });
-      }
-      window.addEventListener('scroll', reveal, { passive: true });
-      reveal();
-      // Animate hero headline
-      var hero = document.querySelector('.hero-copy h1');
-      if (hero) {
-        hero.style.opacity = 0;
-        setTimeout(function () {
-          hero.style.transition = 'opacity 1.1s cubic-bezier(.77,0,.18,1)';
-          hero.style.opacity = 1;
-        }, 200);
-      }
-      // Animate CTA
-      var cta = document.querySelector('.hero-actions');
-      if (cta) {
-        cta.style.transform = 'translateY(32px)';
-        cta.style.opacity = 0;
-        setTimeout(function () {
-          cta.style.transition = 'all 1.1s cubic-bezier(.77,0,.18,1)';
-          cta.style.transform = 'translateY(0)';
-          cta.style.opacity = 1;
-        }, 600);
-      }
-      // Smooth scroll for scroll-indicator
-      var scrollArrow = document.getElementById('scroll-indicator');
-      if (scrollArrow) {
-        scrollArrow.addEventListener('click', function(e) {
-          e.preventDefault();
-          var target = document.getElementById('why');
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      }
-    });
-  </script>
-  <style>
-    /* Animated background shapes */
-    .hero::before {
-      content: "";
-      position: absolute;
-      left: -120px; top: -120px;
-      width: 340px; height: 340px;
-      background: radial-gradient(circle, #2563eb33 60%, transparent 80%);
-      z-index: 0;
-      animation: float1 7s ease-in-out infinite alternate;
-    }
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -80px; bottom: -80px;
-      width: 220px; height: 220px;
-      background: radial-gradient(circle, #16a34a22 60%, transparent 80%);
-      z-index: 0;
-      animation: float2 9s ease-in-out infinite alternate;
-    }
-    @keyframes float1 {
-      0% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(30px) scale(1.08); }
-    }
-    @keyframes float2 {
-      0% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(-24px) scale(1.04); }
-    }
-    .hero-copy, .hero-side { position: relative; z-index: 1; }
-    /* Reveal animation */
-    .reveal { opacity: 0; transform: translateY(40px); transition: all 1.1s cubic-bezier(.77,0,.18,1); }
-    .reveal.revealed { opacity: 1; transform: none; }
-    /* Scroll indicator */
-    .scroll-indicator {
-      position: absolute;
-      left: 50%; bottom: 18px;
-      transform: translateX(-50%);
-      font-size: 2.2rem;
-      color: var(--blue);
-      opacity: 0.7;
-      animation: bounceDown 1.7s infinite;
-      z-index: 2;
-      pointer-events: none;
-    }
-    @keyframes bounceDown {
-      0%, 100% { transform: translate(-50%, 0); }
-      50% { transform: translate(-50%, 18px); }
-    }
-  </style>
 </head>
 <body>
-  <div class="page-shell grid-bg">
-    <div class="topbar">
-      <div class="container nav">
-        <a class="brand" href="#top" aria-label="WorkflowBench home">
-          <img class="logo-light" src="assets/workflowbench_logo_primary.svg" alt="WorkflowBench" height="44" />
-          <img class="logo-dark"  src="assets/workflowbench_logo_dark.svg"    alt="WorkflowBench" height="44" />
+
+  <!-- ═══════════════ AURORA BACKGROUND ═══════════════ -->
+  <div class="aurora" aria-hidden="true">
+    <div class="aurora__blob aurora__blob--1"></div>
+    <div class="aurora__blob aurora__blob--2"></div>
+    <div class="aurora__blob aurora__blob--3"></div>
+  </div>
+
+  <!-- Dot grid overlay -->
+  <div class="dot-grid" aria-hidden="true"></div>
+
+  <!-- ═══════════════ NAVIGATION ═══════════════ -->
+  <header class="nav-bar" id="nav-bar">
+    <div class="container nav-inner">
+      <a class="brand" href="#" aria-label="WorkflowBench home">
+        <img class="logo-light" src="assets/workflowbench_logo_primary.svg" alt="WorkflowBench" height="36" />
+        <img class="logo-dark"  src="assets/workflowbench_logo_dark.svg"    alt="WorkflowBench" height="36" />
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#why" class="nav-link">Why</a>
+        <a href="#how" class="nav-link">How it works</a>
+        <a href="#coverage" class="nav-link">Coverage</a>
+        <a href="#scoring" class="nav-link">Scoring</a>
+        <a href="docs.html" class="nav-link">Docs</a>
+      </nav>
+
+      <div class="nav-right">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark / light mode">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <a class="btn-github" href="https://github.com/thegeekajay/WorkflowBench" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
         </a>
-        <nav class="nav-links" aria-label="Primary">
-          <a href="#why">Why it matters</a>
-          <a href="#flow">How it works</a>
-          <a href="#coverage">Coverage</a>
-          <a href="#scores">Scoring</a>
-          <a href="#oss">Open source</a>
-          <a href="docs.html" style="font-weight: 700;">Docs</a>
-          <a href="docs.html#changelog" style="font-weight: 700;">Changelog</a>
-          <a href="https://github.com/thegeekajay/WorkflowBench" style="margin-left:8px; padding: 10px 16px; border-radius: 999px; background: var(--blue); color: #fff; font-weight: 700;">GitHub ↗</a>
-          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark / light mode" title="Toggle theme">
-            <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-          </button>
-        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section class="hero" id="hero">
+    <div class="container hero-inner">
+
+      <!-- Large centered logo mark -->
+      <div class="hero-logo" data-animate="fade-up">
+        <img class="hero-logo__img hero-logo__img--light" src="assets/workflowbench_logo_mark.svg" alt="" width="80" height="80" />
+        <img class="hero-logo__img hero-logo__img--dark"  src="assets/workflowbench_logo_mark.svg" alt="" width="80" height="80" />
+        <div class="hero-logo__glow"></div>
+      </div>
+
+      <div class="hero-badge" data-animate="fade-up" data-delay="0.1">
+        <span class="badge-dot"></span>
+        Open-source benchmark harness
+      </div>
+
+      <h1 class="hero-title" data-animate="split-up">
+        Test AI workflows<br/>before they break<br/>in production.
+      </h1>
+
+      <p class="hero-sub" data-animate="fade-up" data-delay="0.3">
+        Define realistic YAML scenarios. Run prompts or agents. Score correctness, escalation, compliance, latency, and cost — all before rollout.
+      </p>
+
+      <div class="hero-actions" data-animate="fade-up" data-delay="0.5">
+        <a class="btn btn-primary magnetic" href="https://github.com/thegeekajay/WorkflowBench" target="_blank" rel="noopener">
+          <span>Get Started</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <a class="btn btn-ghost magnetic" href="#how">
+          <span>See How It Works</span>
+        </a>
+        <a class="btn btn-ghost magnetic" href="demo_reports/report_demo-good-v2.html" target="_blank" rel="noopener">
+          <span>View Sample Report</span>
+        </a>
+      </div>
+
+      <div class="hero-stats" data-animate="fade-up" data-delay="0.7">
+        <div class="stat">
+          <span class="stat-num" data-count="20">0</span>
+          <span class="stat-label">Enterprise cases</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-count="5">0</span>
+          <span class="stat-label">Scoring signals</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-count="3">0</span>
+          <span class="stat-label">Report formats</span>
+        </div>
+      </div>
+
+      <!-- Floating terminal card -->
+      <div class="hero-terminal" data-animate="float-up" data-delay="0.6">
+        <div class="terminal-chrome">
+          <div class="terminal-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="terminal-title">workflowbench</span>
+        </div>
+        <div class="terminal-body">
+          <div class="term-line" data-type="0"><span class="term-prompt">$</span> <span class="term-cmd">workflowbench run cases/ --adapter openai</span></div>
+          <div class="term-line" data-type="1"><span class="term-success">✓</span> onboarding/new_hire <span class="term-pass">PASS</span></div>
+          <div class="term-line" data-type="2"><span class="term-success">✓</span> approvals/finance_capex <span class="term-pass">PASS</span></div>
+          <div class="term-line" data-type="3"><span class="term-warn">⚠</span> access/vpn_request <span class="term-escalate">ESCALATE</span></div>
+          <div class="term-line" data-type="4"><span class="term-success">✓</span> policy/ack_overdue <span class="term-pass">PASS</span></div>
+          <div class="term-line" data-type="5"><span class="term-success">✓</span> notifications/payroll <span class="term-pass">PASS</span></div>
+          <div class="term-line term-summary" data-type="6"><span class="term-muted">━━━</span> <strong>Score: 91/100</strong> <span class="term-muted">· 5 cases · 0.42s</span></div>
+        </div>
       </div>
     </div>
 
-    <main id="top">
-      <section class="hero">
-        <div class="container hero-grid">
-          <div class="hero-copy">
-            <span class="eyebrow"><span class="dot"></span> Open-source benchmark harness for production AI workflows</span>
-            <h1>Test AI workflows before they break in production.</h1>
-            <p>
-              WorkflowBench helps platform teams define realistic workflow scenarios in YAML, run prompts or agents against them,
-              and score correctness, escalation behavior, compliance misses, latency, and cost before rollout.
-            </p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="https://github.com/thegeekajay/WorkflowBench">View on GitHub ↗</a>
-              <a class="btn btn-secondary" href="#flow">See how it works</a>
-              <a class="btn btn-secondary" href="#oss">Why open source</a>
-            </div>
-            <div class="hero-notes">
-              <span class="metric-chip"><strong>15–20</strong> realistic enterprise-style cases</span>
-              <span class="metric-chip"><strong>HTML + Markdown</strong> shareable reports</span>
-              <span class="metric-chip"><strong>Deterministic</strong> test-like scoring</span>
-            </div>
-            <div style="margin-top:22px; text-align:left;">
-              <a href="demo_reports/report_demo-good-v2.html" target="_blank" style="font-size:1.04em; color:var(--blue); text-decoration:underline; opacity:0.85;">See a sample benchmark report →</a>
-            </div>
-            <a href="#why" class="scroll-indicator" id="scroll-indicator" aria-label="Scroll to Why section">↓</a>
+    <!-- Scroll indicator -->
+    <a href="#why" class="scroll-hint" aria-label="Scroll down">
+      <div class="scroll-hint__wheel"></div>
+    </a>
+  </section>
+
+  <!-- ═══════════════ WHY ═══════════════ -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="section-intro" data-animate="fade-up">
+        <span class="kicker">Why teams need this</span>
+        <h2 class="section-title">Demo success is&nbsp;not<br/>launch confidence.</h2>
+        <p class="section-desc">WorkflowBench is built for teams shipping AI into business processes where edge cases, escalation paths, and policy compliance matter.</p>
+      </div>
+
+      <div class="cards-grid cards-grid--3">
+        <article class="glass-card" data-animate="fade-up" data-delay="0">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
-          <aside class="hero-side" aria-label="WorkflowBench snapshot">
-            <div class="side-stack">
-              <div class="stack-card">
-                <div class="label">What teams run</div>
-                <div class="value">YAML cases</div>
-                <p>Onboarding, approvals, policy acknowledgment, access requests, notifications.</p>
-              </div>
-              <div class="stack-card">
-                <div class="label">What gets measured</div>
-                <div class="value">5 signals</div>
-                <p>Correctness, escalation, compliance, latency, and cost in one benchmark run.</p>
-              </div>
-            </div>
+          <h3>Demos hide failure modes</h3>
+          <p>Happy-path demos look impressive. Proving correct behavior across real edge cases is much harder.</p>
+        </article>
 
-            <div class="code-card">
-              <div class="window-bar">
-                <span class="window-dot"></span>
-                <span class="window-dot"></span>
-                <span class="window-dot"></span>
-                <span>cases/onboarding/new_hire.yaml</span>
-              </div>
-              <pre><code><span class="key">case</span>: onboarding/new_hire
-<span class="key">input</span>:
-  department: Finance
-  region: EU
-<span class="key">rules</span>:
-  - manager_approval
-  - policy_ack_required
-<span class="key">expected</span>:
-  outcome: account_created
-  escalate: false</code></pre>
-            </div>
-
-            <div class="status-board">
-              <div class="section-kicker">What a benchmark run surfaces</div>
-              <div class="status-list">
-                <div class="status-item"><strong>Prompt v2 → v3 comparison</strong> <span class="pill info">91 / 100 overall</span></div>
-                <div class="status-item"><strong>Escalation drift on access requests</strong> <span class="pill alert">Needs review</span></div>
-                <div class="status-item"><strong>Compliance guardrails still intact</strong> <span class="pill success">Passing</span></div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="section reveal" id="why">
-        <div class="container section-card">
-          <div class="section-header">
-            <div>
-              <div class="section-kicker">Why teams need this</div>
-              <h2>Demo success is not launch confidence.</h2>
-            </div>
-            <p>
-              WorkflowBench is built for teams shipping AI into business processes where edge cases, escalation paths, and policy compliance matter.
-              It makes evaluation feel like running tests instead of running a one-off demo.
-            </p>
+        <article class="glass-card" data-animate="fade-up" data-delay="0.1">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
           </div>
+          <h3>No common scorecard</h3>
+          <p>Engineering managers and architects need the same benchmark output to judge readiness and compare versions.</p>
+        </article>
 
-          <div class="problem-grid">
-            <div class="problem-card">
-              <div class="icon-badge">01</div>
-              <h3>Anecdotal demos hide failure modes</h3>
-              <p>It is easy to make a workflow look impressive in a happy-path demo. It is much harder to prove it behaves correctly across real cases.</p>
+        <article class="glass-card" data-animate="fade-up" data-delay="0.2">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </div>
+          <h3>Reliability should be reusable</h3>
+          <p>Open-source cases, deterministic scorers, and local-first reports make validation accessible to any team.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+  <section class="section" id="how">
+    <div class="container">
+      <div class="section-intro" data-animate="fade-up">
+        <span class="kicker">How it works</span>
+        <h2 class="section-title">Four steps from YAML<br/>to launch confidence.</h2>
+        <p class="section-desc">Real scenarios go in. Deterministic scores come out. Leaders get a report they can trust.</p>
+      </div>
+
+      <div class="pipeline">
+        <!-- Step 1 -->
+        <div class="pipeline-step" data-animate="fade-up" data-delay="0">
+          <div class="step-marker"><span>1</span></div>
+          <div class="glass-card glass-card--lg">
+            <div class="step-header">
+              <h3>Define YAML scenarios</h3>
+              <div class="step-pills">
+                <span class="pill">Onboarding</span>
+                <span class="pill">Approvals</span>
+                <span class="pill">Policy</span>
+                <span class="pill">Access</span>
+                <span class="pill">Notifications</span>
+              </div>
             </div>
-            <div class="problem-card">
-              <div class="icon-badge">02</div>
-              <h3>Launch decisions need a common scorecard</h3>
-              <p>Engineering managers and solution architects need the same benchmark output to judge readiness, compare versions, and explain tradeoffs.</p>
-            </div>
-            <div class="problem-card">
-              <div class="icon-badge">03</div>
-              <h3>Reliability should be reusable</h3>
-              <p>Open-source workflow cases, deterministic scorers, and local-first reports make it easier for smaller teams to validate quality before rollout.</p>
+            <div class="code-window">
+              <div class="code-chrome">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <span>cases/onb-001.yaml</span>
+              </div>
+              <pre class="code-body"><code><span class="tok-key">id</span>: onb-001
+<span class="tok-key">name</span>: New hire onboarding
+<span class="tok-key">category</span>: onboarding
+<span class="tok-key">input</span>:
+  <span class="tok-key">department</span>: <span class="tok-str">Finance</span>
+  <span class="tok-key">region</span>: <span class="tok-str">EU</span>
+<span class="tok-key">rules</span>:
+  - <span class="tok-str">manager_approval</span>
+  - <span class="tok-str">policy_ack_required</span>
+<span class="tok-key">expected</span>:
+  <span class="tok-key">outcome</span>: <span class="tok-str">account_created</span>
+  <span class="tok-key">escalate</span>: <span class="tok-bool">false</span></code></pre>
             </div>
           </div>
         </div>
-      </section>
 
-      <section class="section reveal" id="flow">
-        <div class="container infographic-shell">
-          <div class="infographic-top">
-            <div>
-              <div class="section-kicker">How it works - end to end</div>
-              <h3>WorkflowBench: Test AI Workflows Before They Break in Production</h3>
-              <p>Real workflow scenarios go in. Prompts or agents get exercised. Deterministic scores come out. Leaders get a report they can actually use.</p>
+        <!-- Step 2 -->
+        <div class="pipeline-step" data-animate="fade-up" data-delay="0.1">
+          <div class="step-marker"><span>2</span></div>
+          <div class="glass-card glass-card--lg">
+            <div class="step-header">
+              <h3>Run against any provider</h3>
+              <div class="step-pills">
+                <span class="pill pill--active">OpenAI</span>
+                <span class="pill">Anthropic</span>
+                <span class="pill">Echo</span>
+                <span class="pill">Custom Agent</span>
+              </div>
             </div>
-            <div class="top-pills">
-              <span class="pill info">Local-first</span>
-              <span class="pill info">Provider-agnostic</span>
-              <span class="pill info">Test-like evals</span>
-            </div>
-          </div>
-
-          <div class="infographic-grid">
-
-            <article class="flow-panel">
-              <div class="step-head">
-                <div class="step-num">1</div>
-                <div>
-                  <h4>Real workflow scenarios in YAML</h4>
-                  <p>Enterprise-style cases for onboarding, approvals, policy acknowledgment, access requests, and notifications.</p>
-                </div>
+            <div class="code-window code-window--dark">
+              <div class="code-chrome code-chrome--dark">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <span>Terminal</span>
               </div>
-
-              <div class="yaml-block">
-                <div class="window-bar">
-                  <span class="window-dot"></span>
-                  <span class="window-dot"></span>
-                  <span class="window-dot"></span>
-                  <span>cases/onboarding/new_hire.yaml</span>
-                </div>
-                <pre><code><span class="key">case</span>: onboarding/new_hire
-<span class="key">input</span>:
-  department: Finance
-  region: EU
-<span class="key">rules</span>:
-  - manager_approval
-  - policy_ack_required</code></pre>
-              </div>
-
-              <div class="tiny-label">Example workflow library</div>
-              <div class="workflow-pills">
-                <div class="workflow-pill"><span class="mark"></span><span>Onboarding<small>checklist</small></span></div>
-                <div class="workflow-pill"><span class="mark"></span><span>Approvals<small>decision</small></span></div>
-                <div class="workflow-pill"><span class="mark"></span><span>Policy ack<small>compliance</small></span></div>
-                <div class="workflow-pill"><span class="mark"></span><span>Access reqs<small>permissions</small></span></div>
-                <div class="workflow-pill"><span class="mark"></span><span>Notifications<small>routing</small></span></div>
-              </div>
-            </article>
-
-            <article class="flow-panel">
-              <div class="step-head">
-                <div class="step-num">2</div>
-                <div>
-                  <h4>Agent or prompt execution</h4>
-                  <p>Run the same suite across prompts, models, and agent entrypoints.</p>
-                </div>
-              </div>
-
-              <div class="tab-row">
-                <span class="tab-chip">Prompt v4</span>
-                <span class="tab-chip muted">Agent exec</span>
-              </div>
-
-              <div class="runner-block">
-                <div class="terminal-bar">
-                  <span class="window-dot"></span>
-                  <span class="window-dot"></span>
-                  <span class="window-dot"></span>
-                  <span>workflowbench run cases/ --adapter openai</span>
-                </div>
-                <div class="runner-lines">
-                  <div class="runner-line"><span>▢ onboarding/new_hire PASS</span><span class="signal green"></span></div>
-                  <div class="runner-line"><span>▢ approvals/finance_capex PASS</span><span class="signal green"></span></div>
-                  <div class="runner-line"><span>▢ access/vpn_request ESCALATE</span><span class="signal amber"></span></div>
-                  <div class="runner-line"><span>▢ policy/ack_overdue PASS</span><span class="signal green"></span></div>
-                  <div class="runner-line"><span>▢ notifications/payroll PASS</span><span class="signal green"></span></div>
-                </div>
-              </div>
-
-              <div class="normalizer">
-                <div>
-                  <h5>Normalized interface</h5>
-                  <p>One runner across prompts, models, and agents.</p>
-                </div>
-                <div class="normalizer-icon"><span></span></div>
-              </div>
-            </article>
-
-            <article class="flow-panel">
-              <div class="step-head">
-                <div class="step-num">3</div>
-                <div>
-                  <h4>Scoring across correctness, escalation, compliance, latency, cost</h4>
-                  <p>Weighted signals that expose both benchmark health and failure patterns.</p>
-                </div>
-              </div>
-
-              <div class="summary-block">
-                <div class="summary-top">
-                  <div class="eyeline">Run summary</div>
-                  <div class="summary-value"><strong>91 / 100</strong><span>20 pass</span></div>
-                </div>
-
-                <div class="gauge-grid">
-                  <div class="gauge-card">
-                    <div class="gauge" style="--value:96; --accent: var(--green);"><span>96</span></div>
-                    <h5>Correctness</h5>
-                    <p>Expected outcome quality</p>
-                  </div>
-                  <div class="gauge-card">
-                    <div class="gauge" style="--value:92; --accent: var(--blue);"><span>92</span></div>
-                    <h5>Escalation</h5>
-                    <p>Safe handoffs and routing</p>
-                  </div>
-                  <div class="gauge-card">
-                    <div class="gauge" style="--value:100; --accent: var(--green);"><span>100</span></div>
-                    <h5>Compliance</h5>
-                    <p>Forbidden actions avoided</p>
-                  </div>
-                  <div class="gauge-card">
-                    <div class="gauge" style="--value:84; --accent: var(--amber);"><span>84</span></div>
-                    <h5>Latency</h5>
-                    <p>Runtime impact still visible</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="score-footer">
-                <div>
-                  <h5>Cost</h5>
-                  <p>Per-case estimate with budget visibility.</p>
-                </div>
-                <div class="pill success"><strong>$0.021</strong> within budget</div>
-              </div>
-            </article>
-
-            <article class="flow-panel">
-              <div class="step-head">
-                <div class="step-num">4</div>
-                <div>
-                  <h4>Shareable benchmark report</h4>
-                  <p>Engineers get case-level detail. Leaders get a benchmark summary they can trust.</p>
-                </div>
-              </div>
-
-              <div class="report-block">
-                <div class="report-head">benchmark-report.html</div>
-                <div class="report-body">
-                  <div class="report-mini-grid">
-                    <div class="report-box">
-                      <h5>Overall score</h5>
-                      <div class="report-score"><strong>91</strong><span>/ 100</span></div>
-                    </div>
-                    <div class="report-box">
-                      <h5>Failure clusters</h5>
-                      <div class="cluster-list">
-                        <div class="cluster-item"><span>Escalation</span><span class="bar-track"><span class="bar-fill" style="width: 72%;"></span></span></div>
-                        <div class="cluster-item"><span>Latency</span><span class="bar-track"><span class="bar-fill amber" style="width: 38%;"></span></span></div>
-                        <div class="cluster-item"><span>Compliance</span><span class="bar-track"><span class="bar-fill red" style="width: 19%;"></span></span></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="report-box">
-                    <h5>Compare benchmark runs</h5>
-                    <div class="compare-list">
-                      <div class="compare-item"><span>prompt-v1</span><span class="bar-track"><span class="bar-fill gray" style="width: 62%;"></span></span><strong>76</strong></div>
-                      <div class="compare-item"><span>prompt-v2</span><span class="bar-track"><span class="bar-fill" style="width: 88%;"></span></span><strong>91</strong></div>
-                    </div>
-                  </div>
-
-                  <div class="report-box">
-                    <h5>Per-case detail</h5>
-                    <div class="detail-list">
-                      <div class="detail-item"><span>onboarding/new_hire</span><span class="pill success">PASS</span></div>
-                      <div class="detail-item"><span>access/vpn_request</span><span class="pill alert">ESCALATE</span></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="report-tabs">
-                  <span class="tab-switch active">HTML</span>
-                  <span class="tab-switch">Markdown</span>
-                  <span class="tab-switch">JSON</span>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <div class="leader-ribbon">
-            <h4>What leaders care about</h4>
-            <div class="leader-grid">
-              <div class="leader-item">
-                <div class="leader-icon">✓</div>
-                <div>
-                  <h5>Launch readiness</h5>
-                  <p>Go/no-go confidence grounded in reproducible workflow evidence.</p>
-                </div>
-              </div>
-              <div class="leader-item">
-                <div class="leader-icon">↺</div>
-                <div>
-                  <h5>Regression detection</h5>
-                  <p>Catch workflow drift before a prompt, model, or agent change ships.</p>
-                </div>
-              </div>
-              <div class="leader-item">
-                <div class="leader-icon">◇</div>
-                <div>
-                  <h5>Stakeholder trust</h5>
-                  <p>Reports that translate technical quality into launch-level confidence.</p>
-                </div>
+              <div class="code-body code-body--dark">
+                <div class="run-line"><span class="run-prompt">$</span> workflowbench run cases/ --adapter openai</div>
+                <div class="run-line"><span class="run-ok">✓</span> onboarding/new_hire <span class="run-pass">PASS</span></div>
+                <div class="run-line"><span class="run-ok">✓</span> approvals/finance_capex <span class="run-pass">PASS</span></div>
+                <div class="run-line"><span class="run-warning">⚠</span> access/vpn_request <span class="run-esc">ESCALATE</span></div>
+                <div class="run-line"><span class="run-ok">✓</span> policy/ack_overdue <span class="run-pass">PASS</span></div>
+                <div class="run-line"><span class="run-ok">✓</span> notifications/payroll <span class="run-pass">PASS</span></div>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <section class="section" id="coverage">
-        <div class="container section-card">
-          <div class="section-header">
-            <div>
-              <div class="section-kicker">Production-style coverage</div>
-              <h2>Enterprise workflows that feel real, not synthetic.</h2>
+        <!-- Step 3 -->
+        <div class="pipeline-step" data-animate="fade-up" data-delay="0.2">
+          <div class="step-marker"><span>3</span></div>
+          <div class="glass-card glass-card--lg">
+            <div class="step-header">
+              <h3>Deterministic scoring</h3>
             </div>
-            <p>
-              The sample suite is designed around common business processes where correctness and escalation behavior matter more than chatbot polish.
-            </p>
-          </div>
-
-          <div class="workflow-grid">
-            <div class="workflow-card">
-              <div class="icon-badge">HR</div>
-              <h3>Onboarding</h3>
-              <p>Validate identity, create accounts, route approvals, and confirm region-specific policy steps.</p>
-              <ul>
-                <li>New hire creation</li>
-                <li>Department-specific checklists</li>
-                <li>Policy acknowledgment required</li>
-              </ul>
-            </div>
-            <div class="workflow-card">
-              <div class="icon-badge">AP</div>
-              <h3>Approvals</h3>
-              <p>Test financial thresholds, manager routing, and escalation logic when approvals are ambiguous or missing.</p>
-              <ul>
-                <li>Capex approval routing</li>
-                <li>Threshold-based decisions</li>
-                <li>Safe escalation paths</li>
-              </ul>
-            </div>
-            <div class="workflow-card">
-              <div class="icon-badge">PL</div>
-              <h3>Policy acknowledgment</h3>
-              <p>Ensure workflows respect compliance requirements when reminders, overdue states, or exceptions appear.</p>
-              <ul>
-                <li>Reminder cadence</li>
-                <li>Overdue handling</li>
-                <li>Forbidden action checks</li>
-              </ul>
-            </div>
-            <div class="workflow-card">
-              <div class="icon-badge">IT</div>
-              <h3>Access requests</h3>
-              <p>Score whether agents grant access correctly, deny risky requests, or escalate when approval is required.</p>
-              <ul>
-                <li>VPN and app access</li>
-                <li>Regional access rules</li>
-                <li>Manager approval required</li>
-              </ul>
-            </div>
-            <div class="workflow-card">
-              <div class="icon-badge">NT</div>
-              <h3>Notifications</h3>
-              <p>Check routing, timing, and wording across operational alerts, payroll notices, and internal reminders.</p>
-              <ul>
-                <li>Stakeholder routing</li>
-                <li>Timing constraints</li>
-                <li>Message correctness</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="scores">
-        <div class="container score-layout">
-          <div class="score-matrix">
-            <div class="section-kicker">Signals that matter</div>
-            <h3>Scoring designed for engineers and managers</h3>
-            <p>WorkflowBench favors deterministic evaluation wherever possible so benchmark results stay reproducible and actionable.</p>
-
-            <div class="score-legend">
-              <div class="legend-item">
-                <strong>Correctness</strong>
-                <span class="bar-track"><span class="bar-fill green" style="width: 96%;"></span></span>
-                <span>expected outcome</span>
+            <div class="score-gauges">
+              <div class="gauge-item">
+                <svg class="gauge-ring" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" class="gauge-track"/>
+                  <circle cx="60" cy="60" r="52" class="gauge-fill" style="--percent:96" data-score="96"/>
+                </svg>
+                <div class="gauge-center"><span class="gauge-num" data-count="96">0</span></div>
+                <span class="gauge-label">Correctness</span>
               </div>
-              <div class="legend-item">
-                <strong>Escalation</strong>
-                <span class="bar-track"><span class="bar-fill" style="width: 92%;"></span></span>
-                <span>safe handoffs</span>
+              <div class="gauge-item">
+                <svg class="gauge-ring" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" class="gauge-track"/>
+                  <circle cx="60" cy="60" r="52" class="gauge-fill gauge-fill--blue" style="--percent:92" data-score="92"/>
+                </svg>
+                <div class="gauge-center"><span class="gauge-num" data-count="92">0</span></div>
+                <span class="gauge-label">Escalation</span>
               </div>
-              <div class="legend-item">
-                <strong>Compliance</strong>
-                <span class="bar-track"><span class="bar-fill green" style="width: 100%;"></span></span>
-                <span>forbidden actions</span>
+              <div class="gauge-item">
+                <svg class="gauge-ring" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" class="gauge-track"/>
+                  <circle cx="60" cy="60" r="52" class="gauge-fill" style="--percent:100" data-score="100"/>
+                </svg>
+                <div class="gauge-center"><span class="gauge-num" data-count="100">0</span></div>
+                <span class="gauge-label">Compliance</span>
               </div>
-              <div class="legend-item">
-                <strong>Latency</strong>
-                <span class="bar-track"><span class="bar-fill amber" style="width: 84%;"></span></span>
-                <span>runtime tradeoff</span>
+              <div class="gauge-item">
+                <svg class="gauge-ring" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" class="gauge-track"/>
+                  <circle cx="60" cy="60" r="52" class="gauge-fill gauge-fill--amber" style="--percent:84" data-score="84"/>
+                </svg>
+                <div class="gauge-center"><span class="gauge-num" data-count="84">0</span></div>
+                <span class="gauge-label">Latency</span>
               </div>
-              <div class="legend-item">
-                <strong>Cost</strong>
-                <span class="bar-track"><span class="bar-fill gray" style="width: 68%;"></span></span>
-                <span>budget visibility</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="oss-panel">
-            <div class="section-kicker">What ships in the MVP</div>
-            <h3>Built to be local-first, small-team friendly, and easy to extend</h3>
-            <p>The project structure keeps workflow cases, adapters, scorers, and reports separated so teams can compare providers without rewriting tests.</p>
-
-            <div class="oss-grid">
-              <div class="mini-panel">
-                <div class="tiny-label">Case schema</div>
-                <strong>YAML scenarios</strong>
-                <p>Expected outcomes, escalation rules, forbidden actions, and metadata in a readable format.</p>
-              </div>
-              <div class="mini-panel">
-                <div class="tiny-label">Runner</div>
-                <strong>One CLI command</strong>
-                <p>Benchmark a full suite locally and generate a report in a single run.</p>
-              </div>
-              <div class="mini-panel">
-                <div class="tiny-label">Adapters</div>
-                <strong>Provider-agnostic</strong>
-                <p>Keep the interface stable while swapping prompts, providers, or agent entrypoints.</p>
-              </div>
-              <div class="mini-panel">
-                <div class="tiny-label">Reports</div>
-                <strong>Shareable output</strong>
-                <p>Give engineers case-level detail and leaders a benchmark story they can understand.</p>
+              <div class="gauge-item">
+                <svg class="gauge-ring" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" class="gauge-track"/>
+                  <circle cx="60" cy="60" r="52" class="gauge-fill gauge-fill--gray" style="--percent:68" data-score="68"/>
+                </svg>
+                <div class="gauge-center"><span class="gauge-num" data-count="68">0</span></div>
+                <span class="gauge-label">Cost</span>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <section class="section" id="oss">
-        <div class="container section-card">
-          <div class="section-header">
-            <div>
-              <div class="section-kicker">Open-source project positioning</div>
-              <h2>A reliability signal for teams building real AI systems.</h2>
-            </div>
-            <p>
-              WorkflowBench is not trying to be a full eval platform. It is a lightweight benchmark harness that helps smaller teams prove quality before rollout and compare changes over time.
-            </p>
-          </div>
-
-          <div class="benefit-grid">
-            <div class="feature-item">
-              <span>1</span>
-              <div>
-                <strong>Shows engineering depth, not just prompting</strong>
-                <p>It tells a stronger story about systems thinking, launch quality, and operational judgment than a simple chatbot demo.</p>
+        <!-- Step 4 -->
+        <div class="pipeline-step" data-animate="fade-up" data-delay="0.3">
+          <div class="step-marker"><span>4</span></div>
+          <div class="glass-card glass-card--lg">
+            <div class="step-header">
+              <h3>Shareable reports</h3>
+              <div class="step-pills">
+                <span class="pill pill--active">HTML</span>
+                <span class="pill">Markdown</span>
+                <span class="pill">JSON</span>
               </div>
             </div>
-            <div class="feature-item">
-              <span>2</span>
-              <div>
-                <strong>Makes launch risk discussable</strong>
-                <p>Benchmark reports expose failure clusters, comparison runs, and workflow-level regressions in a manager-friendly format.</p>
+            <div class="report-preview">
+              <div class="report-row">
+                <div class="report-card">
+                  <span class="report-label">Overall Score</span>
+                  <div class="report-big"><strong class="counter" data-count="91">0</strong><span class="report-of">/ 100</span></div>
+                </div>
+                <div class="report-card">
+                  <span class="report-label">Failure Clusters</span>
+                  <div class="report-bars">
+                    <div class="rbar"><span>Escalation</span><div class="rbar-track"><div class="rbar-fill" style="--w:72%"></div></div></div>
+                    <div class="rbar"><span>Latency</span><div class="rbar-track"><div class="rbar-fill rbar-fill--amber" style="--w:38%"></div></div></div>
+                    <div class="rbar"><span>Compliance</span><div class="rbar-track"><div class="rbar-fill rbar-fill--green" style="--w:12%"></div></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="report-row">
+                <div class="report-card report-card--wide">
+                  <span class="report-label">Compare Runs</span>
+                  <div class="report-compare">
+                    <div class="rc-row"><span>prompt-v1</span><div class="rbar-track"><div class="rbar-fill rbar-fill--muted" style="--w:62%"></div></div><strong>76</strong></div>
+                    <div class="rc-row"><span>prompt-v2</span><div class="rbar-track"><div class="rbar-fill" style="--w:91%"></div></div><strong>91</strong></div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="feature-item">
-              <span>3</span>
-              <div>
-                <strong>Useful even without a hosted platform</strong>
-                <p>Teams can define cases locally, run a suite on their own adapters, and still produce reports that are easy to share.</p>
-              </div>
-            </div>
           </div>
-        </div>
-      </section>
-
-      <section class="container">
-        <div class="cta-band">
-          <div>
-            <div class="section-kicker">Start benchmarking</div>
-            <h3>Bring AI workflow evaluation closer to the way engineers already test software.</h3>
-            <p>WorkflowBench runs locally, needs no hosted service, and produces HTML, Markdown, and JSON reports you can share with your entire team. Stop shipping AI workflows on vibes - start benchmarking.</p>
-          </div>
-          <div class="hero-actions" style="margin-top:0;">
-            <a class="btn btn-primary" href="https://github.com/thegeekajay/WorkflowBench">View on GitHub ↗</a>
-            <a class="btn btn-secondary" href="https://github.com/thegeekajay/WorkflowBench#quick-start">Quick Start</a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="container footer-row">
-        <div>&copy; 2026 WorkflowBench · MIT License · Built by <a href="https://github.com/thegeekajay" style="color: var(--blue);">Ajay Kumar Ganesh</a></div>
-        <div class="footer-links">
-          <a href="#why">Why it matters</a>
-          <a href="#flow">How it works</a>
-          <a href="#coverage">Coverage</a>
-          <a href="#scores">Scoring</a>
-          <a href="docs.html">Documentation</a>
-          <a href="docs.html#changelog">Changelog</a>
-          <a href="https://github.com/thegeekajay/WorkflowBench">GitHub ↗</a>
         </div>
       </div>
-    </footer>
-  </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ COVERAGE ═══════════════ -->
+  <section class="section" id="coverage">
+    <div class="container">
+      <div class="section-intro" data-animate="fade-up">
+        <span class="kicker">Production-style coverage</span>
+        <h2 class="section-title">Enterprise workflows that<br/>feel real, not synthetic.</h2>
+        <p class="section-desc">Common business processes where correctness and escalation behavior matter more than chatbot polish.</p>
+      </div>
+
+      <div class="cards-grid cards-grid--5">
+        <article class="glass-card glass-card--hover" data-animate="fade-up" data-delay="0">
+          <div class="card-badge">HR</div>
+          <h3>Onboarding</h3>
+          <p>Identity verification, account creation, approval routing, region-specific policy steps.</p>
+        </article>
+        <article class="glass-card glass-card--hover" data-animate="fade-up" data-delay="0.06">
+          <div class="card-badge">AP</div>
+          <h3>Approvals</h3>
+          <p>Financial thresholds, manager routing, escalation logic for ambiguous approvals.</p>
+        </article>
+        <article class="glass-card glass-card--hover" data-animate="fade-up" data-delay="0.12">
+          <div class="card-badge">PL</div>
+          <h3>Policy</h3>
+          <p>Compliance requirements, reminder cadence, overdue handling, forbidden action checks.</p>
+        </article>
+        <article class="glass-card glass-card--hover" data-animate="fade-up" data-delay="0.18">
+          <div class="card-badge">IT</div>
+          <h3>Access</h3>
+          <p>VPN &amp; app access grants, risky request denial, manager approval gating.</p>
+        </article>
+        <article class="glass-card glass-card--hover" data-animate="fade-up" data-delay="0.24">
+          <div class="card-badge">NT</div>
+          <h3>Notifications</h3>
+          <p>Stakeholder routing, timing constraints, message correctness across channels.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SCORING ═══════════════ -->
+  <section class="section" id="scoring">
+    <div class="container">
+      <div class="split-grid">
+        <div class="split-left" data-animate="fade-up">
+          <span class="kicker">Signals that matter</span>
+          <h2 class="section-title">Scoring for engineers<br/>and managers.</h2>
+          <p class="section-desc">Deterministic evaluation so benchmark results stay reproducible and actionable.</p>
+
+          <div class="score-bars">
+            <div class="sbar" data-animate="bar" data-delay="0">
+              <div class="sbar-head"><strong>Correctness</strong><span>96%</span></div>
+              <div class="sbar-track"><div class="sbar-fill" style="--w:96%"></div></div>
+            </div>
+            <div class="sbar" data-animate="bar" data-delay="0.1">
+              <div class="sbar-head"><strong>Escalation</strong><span>92%</span></div>
+              <div class="sbar-track"><div class="sbar-fill sbar-fill--blue" style="--w:92%"></div></div>
+            </div>
+            <div class="sbar" data-animate="bar" data-delay="0.15">
+              <div class="sbar-head"><strong>Compliance</strong><span>100%</span></div>
+              <div class="sbar-track"><div class="sbar-fill" style="--w:100%"></div></div>
+            </div>
+            <div class="sbar" data-animate="bar" data-delay="0.2">
+              <div class="sbar-head"><strong>Latency</strong><span>84%</span></div>
+              <div class="sbar-track"><div class="sbar-fill sbar-fill--amber" style="--w:84%"></div></div>
+            </div>
+            <div class="sbar" data-animate="bar" data-delay="0.25">
+              <div class="sbar-head"><strong>Cost</strong><span>68%</span></div>
+              <div class="sbar-track"><div class="sbar-fill sbar-fill--gray" style="--w:68%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="split-right" data-animate="fade-up" data-delay="0.2">
+          <span class="kicker">What ships</span>
+          <h2 class="section-title section-title--sm">Local-first, small-team friendly, easy to extend.</h2>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <strong>YAML Scenarios</strong>
+              <p>Readable format with expected outcomes, escalation rules, and forbidden actions.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+              <strong>One CLI Command</strong>
+              <p>Benchmark a full suite locally and generate a report in a single run.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              </div>
+              <strong>Provider-Agnostic</strong>
+              <p>Swap prompts, providers, or agent entrypoints without rewriting tests.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <strong>Shareable Reports</strong>
+              <p>HTML, Markdown, JSON — engineers get detail, leaders get the story.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ OPEN SOURCE ═══════════════ -->
+  <section class="section" id="oss">
+    <div class="container">
+      <div class="section-intro" data-animate="fade-up">
+        <span class="kicker">Open source</span>
+        <h2 class="section-title">A reliability signal for teams<br/>building real AI systems.</h2>
+        <p class="section-desc">A lightweight benchmark harness — not a full eval platform. Prove quality before rollout, compare changes over time.</p>
+      </div>
+
+      <div class="cards-grid cards-grid--3">
+        <article class="glass-card" data-animate="fade-up" data-delay="0">
+          <div class="card-num">01</div>
+          <h3>Engineering depth, not just prompting</h3>
+          <p>Systems thinking, launch quality, and operational judgment — beyond a simple chatbot demo.</p>
+        </article>
+        <article class="glass-card" data-animate="fade-up" data-delay="0.1">
+          <div class="card-num">02</div>
+          <h3>Makes launch risk discussable</h3>
+          <p>Reports expose failure clusters, comparison runs, and workflow regressions in a manager-friendly format.</p>
+        </article>
+        <article class="glass-card" data-animate="fade-up" data-delay="0.2">
+          <div class="card-num">03</div>
+          <h3>No hosted platform needed</h3>
+          <p>Define cases locally, run on your own adapters, produce reports that are easy to share.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CTA ═══════════════ -->
+  <section class="section section--cta">
+    <div class="container">
+      <div class="cta-card" data-animate="fade-up">
+        <h2 class="section-title">Stop shipping AI workflows<br/>on vibes.</h2>
+        <p class="section-desc">WorkflowBench runs locally, needs no hosted service, and produces reports you can share with your entire team.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-primary--lg magnetic" href="https://github.com/thegeekajay/WorkflowBench" target="_blank" rel="noopener">
+            <span>View on GitHub</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a class="btn btn-ghost magnetic" href="https://github.com/thegeekajay/WorkflowBench#quick-start">
+            <span>Quick Start Guide</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">&copy; 2026 WorkflowBench · MIT License · Built by <a href="https://github.com/thegeekajay">Ajay Kumar Ganesh</a></div>
+      <div class="footer-links">
+        <a href="#why">Why</a>
+        <a href="#how">How it works</a>
+        <a href="#coverage">Coverage</a>
+        <a href="#scoring">Scoring</a>
+        <a href="docs.html">Docs</a>
+        <a href="docs.html#changelog">Changelog</a>
+        <a href="https://github.com/thegeekajay/WorkflowBench">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════ SCRIPTS ═══════════════ -->
   <script>
-    (function () {
+  (function() {
+    'use strict';
+
+    /* ── Theme ── */
+    (function initTheme() {
+      var s = localStorage.getItem('wfb-theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (s === 'dark' || (s !== 'light' && prefersDark)) document.documentElement.classList.add('dark');
       var btn = document.getElementById('theme-toggle');
-      if (!btn) return;
-      btn.addEventListener('click', function () {
+      if (btn) btn.addEventListener('click', function() {
         var isDark = document.documentElement.classList.toggle('dark');
         localStorage.setItem('wfb-theme', isDark ? 'dark' : 'light');
       });
     })();
+
+    /* ── GSAP + ScrollTrigger ── */
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ── Lenis smooth scroll (single RAF via GSAP ticker) ── */
+    var lenis = new Lenis({ duration: 1.1, easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true, wheelMultiplier: 1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // Anchor clicks use Lenis
+    document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        var target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: -80 }); }
+      });
+    });
+
+    /* ── Nav blur on scroll ── */
+    var navBar = document.getElementById('nav-bar');
+    ScrollTrigger.create({
+      start: 'top -80',
+      onUpdate: function(self) {
+        navBar.classList.toggle('nav-bar--scrolled', self.progress > 0);
+      }
+    });
+
+    // Fade-up elements
+    document.querySelectorAll('[data-animate="fade-up"]').forEach(function(el) {
+      gsap.from(el, {
+        y: 60, opacity: 0, duration: 1, ease: 'power3.out',
+        delay: parseFloat(el.dataset.delay || 0),
+        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+      });
+    });
+
+    // Float-up (hero terminal)
+    document.querySelectorAll('[data-animate="float-up"]').forEach(function(el) {
+      gsap.from(el, {
+        y: 100, opacity: 0, duration: 1.4, ease: 'power3.out',
+        delay: parseFloat(el.dataset.delay || 0),
+      });
+    });
+
+    // Hero title split animation
+    var heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+      var html = heroTitle.innerHTML;
+      var words = html.split(/(\s+|<br\s*\/?>)/);
+      heroTitle.innerHTML = words.map(function(w) {
+        if (/^<br/.test(w)) return w;
+        if (/^\s+$/.test(w)) return w;
+        return '<span class="word-wrap"><span class="word">' + w + '</span></span>';
+      }).join('');
+
+      var wordEls = heroTitle.querySelectorAll('.word');
+      gsap.set(wordEls, { yPercent: 120, opacity: 0 });
+      gsap.to(wordEls, {
+        yPercent: 0, opacity: 1, duration: 0.9, ease: 'power4.out',
+        stagger: 0.045, delay: 0.3
+      });
+    }
+
+    // Terminal typing effect
+    var termLines = document.querySelectorAll('.hero-terminal .term-line');
+    termLines.forEach(function(line, i) {
+      gsap.from(line, {
+        opacity: 0, x: -20, duration: 0.5, ease: 'power2.out',
+        delay: 1.2 + i * 0.18
+      });
+    });
+
+    // Score gauge rings animation
+    document.querySelectorAll('.gauge-fill').forEach(function(circle) {
+      var pct = parseInt(circle.style.getPropertyValue('--percent')) || 0;
+      var circumference = 2 * Math.PI * 52;
+      circle.style.strokeDasharray = circumference;
+      circle.style.strokeDashoffset = circumference;
+
+      ScrollTrigger.create({
+        trigger: circle.closest('.pipeline-step') || circle,
+        start: 'top 80%',
+        onEnter: function() {
+          gsap.to(circle, {
+            strokeDashoffset: circumference - (pct / 100) * circumference,
+            duration: 1.4, ease: 'power3.out'
+          });
+        },
+        once: true
+      });
+    });
+
+    // Score bars animation
+    document.querySelectorAll('.sbar-fill, .rbar-fill').forEach(function(bar) {
+      ScrollTrigger.create({
+        trigger: bar, start: 'top 90%',
+        onEnter: function() { bar.classList.add('animate'); },
+        once: true
+      });
+    });
+
+    // Counter animations
+    function animateCounters(scope) {
+      var els = (scope || document).querySelectorAll('[data-count], .counter[data-count]');
+      els.forEach(function(el) {
+        var target = parseInt(el.dataset.count);
+        ScrollTrigger.create({
+          trigger: el, start: 'top 90%',
+          onEnter: function() {
+            gsap.to({ val: 0 }, {
+              val: target, duration: 1.6, ease: 'power2.out',
+              onUpdate: function() { el.textContent = Math.round(this.targets()[0].val); }
+            });
+          },
+          once: true
+        });
+      });
+    }
+    animateCounters();
+
+    /* ── Magnetic button effect ── */
+    document.querySelectorAll('.magnetic').forEach(function(btn) {
+      btn.addEventListener('mousemove', function(e) {
+        var rect = btn.getBoundingClientRect();
+        var x = e.clientX - rect.left - rect.width / 2;
+        var y = e.clientY - rect.top - rect.height / 2;
+        gsap.to(btn, { x: x * 0.2, y: y * 0.2, duration: 0.3, ease: 'power2.out' });
+      });
+      btn.addEventListener('mouseleave', function() {
+        gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' });
+      });
+    });
+
+    /* ── Parallax tilt on glass cards ── */
+    document.querySelectorAll('.glass-card--hover').forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = (e.clientX - rect.left) / rect.width - 0.5;
+        var y = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(card, {
+          rotateY: x * 8, rotateX: -y * 8,
+          duration: 0.4, ease: 'power2.out',
+          transformPerspective: 800
+        });
+      });
+      card.addEventListener('mouseleave', function() {
+        gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.6, ease: 'power2.out' });
+      });
+    });
+
+  })();
   </script>
 </body>
 </html>
