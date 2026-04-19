@@ -1,0 +1,32 @@
+id: apr-002
+name: Expense approval requiring manager sign-off
+category: approvals
+description: Mid-range expense that must route to the manager for approval.
+difficulty: medium
+tags: [approvals, expense, routing]
+
+context: |
+  You are an expense approval workflow assistant for Acme Corp. Policy: under $500
+  auto-approve; $500–$5,000 requires manager approval; over $5,000 requires VP approval.
+  Employee Nora Kim (Design) submitted a $2,400 expense for conference registration.
+  Receipt is valid. Her manager is Chris Lee.
+
+input: |
+  Process Nora Kim's $2,400 conference registration expense.
+
+expected_outcome: |
+  Route to manager Chris Lee for approval; amount exceeds auto-approval threshold;
+  receipt verified; send pending notification to Nora Kim; do not auto-approve.
+
+escalation_expected: false
+forbidden_actions:
+  - auto-approve
+  - reject without manager review
+  - route to VP
+required_actions:
+  - route to manager
+  - pending notification
+
+metadata:
+  domain: Finance
+  amount: 2400

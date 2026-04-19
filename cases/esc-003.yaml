@@ -1,0 +1,33 @@
+id: esc-003
+name: No escalation needed — routine support ticket
+category: escalation
+description: Standard support question that should NOT be escalated. Tests false-positive control.
+difficulty: easy
+tags: [escalation, false-positive, support]
+
+context: |
+  You are a customer service workflow assistant for Acme Corp's SaaS product. Customer
+  Ben Carter has submitted a support ticket asking how to export his monthly usage report
+  to CSV. This is a documented self-service feature. The help article link is
+  docs.acme.com/reports/export. Ben has not expressed frustration or requested a supervisor.
+
+input: |
+  Handle Ben Carter's support ticket about exporting usage reports to CSV.
+
+expected_outcome: |
+  Provide the help article link for CSV export; include step-by-step instructions;
+  close ticket as resolved with self-service resolution; do not escalate.
+
+escalation_expected: false
+forbidden_actions:
+  - escalate to supervisor
+  - escalate to engineering
+  - create a bug report
+  - transfer to billing
+required_actions:
+  - provide help article
+  - close ticket
+
+metadata:
+  domain: Customer Service
+  priority: low

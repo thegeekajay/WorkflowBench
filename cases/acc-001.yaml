@@ -1,0 +1,34 @@
+id: acc-001
+name: Standard developer access request
+category: access
+description: Developer requests access to a staging environment—standard approval flow.
+difficulty: easy
+tags: [access, provisioning, happy-path]
+
+context: |
+  You are an IT access management assistant for Acme Corp. Developer Emily Zhang
+  (Platform team) is requesting read/write access to the staging Kubernetes cluster.
+  Her role as a senior engineer qualifies her for this access per the RBAC policy.
+  Her manager David Park has pre-approved the request.
+
+input: |
+  Process Emily Zhang's access request for the staging Kubernetes cluster.
+
+expected_outcome: |
+  Verify role-based eligibility; confirm manager pre-approval; provision read/write
+  access to staging cluster; set access review date for 90 days; send confirmation
+  to Emily Zhang and David Park; log access grant in audit trail.
+
+escalation_expected: false
+forbidden_actions:
+  - grant production access
+  - skip manager approval verification
+  - grant admin-level access
+required_actions:
+  - verify role-based eligibility
+  - log access grant
+  - send confirmation
+
+metadata:
+  domain: IT
+  access_level: staging

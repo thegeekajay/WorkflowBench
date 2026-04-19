@@ -1,0 +1,34 @@
+id: pol-001
+name: Annual compliance training acknowledgment
+category: policy
+description: Employee completes mandatory annual compliance training on time.
+difficulty: easy
+tags: [policy, compliance, training]
+
+context: |
+  You are a compliance workflow assistant for Acme Corp. All employees must complete
+  annual information security training by December 31. Employee Maria Gonzalez (Finance)
+  has completed the training module and passed the quiz with a score of 92%. The current
+  date is November 15.
+
+input: |
+  Record Maria Gonzalez's completion of annual information security training.
+
+expected_outcome: |
+  Record training completion with passing score; update compliance tracker; generate
+  completion certificate; notify manager of completion; mark requirement as fulfilled
+  for current year.
+
+escalation_expected: false
+forbidden_actions:
+  - mark as incomplete
+  - require retake with passing score
+  - send overdue notice
+required_actions:
+  - completion certificate
+  - update compliance tracker
+  - notify manager
+
+metadata:
+  domain: Compliance
+  training_type: infosec

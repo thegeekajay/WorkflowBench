@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkflowBench Report — demo-good-v2</title>
+<style>
+  :root { --pass: #22c55e; --fail: #ef4444; --bg: #f8fafc; --card: #fff; --border: #e2e8f0; --text: #1e293b; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 2rem; max-width: 1200px; margin: auto; }
+  h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .meta { color: #64748b; margin-bottom: 1.5rem; font-size: 0.875rem; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .card .value { font-size: 1.75rem; font-weight: 700; }
+  .card .label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+  .score-bar { height: 8px; border-radius: 4px; background: #e2e8f0; overflow: hidden; margin-top: 0.25rem; }
+  .score-bar .fill { height: 100%; border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 2rem; }
+  th, td { padding: 0.625rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8125rem; }
+  th { background: #f1f5f9; font-weight: 600; text-transform: uppercase; font-size: 0.6875rem; letter-spacing: 0.05em; }
+  .badge { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.6875rem; font-weight: 600; }
+  .badge-pass { background: #dcfce7; color: #166534; }
+  .badge-fail { background: #fee2e2; color: #991b1b; }
+  .cluster { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; }
+  .cluster-name { font-weight: 600; margin-bottom: 0.25rem; }
+  .cluster-cases { font-size: 0.8125rem; color: #64748b; }
+  footer { margin-top: 2rem; text-align: center; font-size: 0.75rem; color: #94a3b8; }
+  footer a { color: #3b82f6; text-decoration: none; }
+</style>
+</head>
+<body>
+<h1>WorkflowBench Report</h1>
+<div class="meta">Run <strong>demo-good-v2</strong> &middot; mock/good-agent-v2 &middot; 2026-04-19T04:19:20.519098+00:00</div>
+
+<div class="cards">
+  <div class="card">
+    <div class="value">21</div>
+    <div class="label">Cases</div>
+  </div>
+  <div class="card">
+    <div class="value" style="color: var(--pass);">6</div>
+    <div class="label">Passed</div>
+  </div>
+  <div class="card">
+    <div class="value" style="color: var(--fail);">15</div>
+    <div class="label">Failed</div>
+  </div>
+  <div class="card">
+    <div class="value">28.6%</div>
+    <div class="label">Pass Rate</div>
+    <div class="score-bar"><div class="fill" style="width: 28.6%; background: var(--fail);"></div></div>
+  </div>
+  <div class="card">
+    <div class="value">56.6%</div>
+    <div class="label">Overall Score</div>
+    <div class="score-bar"><div class="fill" style="width: 56.6%; background: var(--fail);"></div></div>
+  </div>
+  <div class="card">
+    <div class="value">17850.0<span style="font-size:0.875rem;">ms</span></div>
+    <div class="label">Total Latency</div>
+  </div>
+  <div class="card">
+    <div class="value">$0.0798</div>
+    <div class="label">Total Cost</div>
+  </div>
+  <div class="card">
+    <div class="value">9030</div>
+    <div class="label">Total Tokens</div>
+  </div>
+</div>
+
+<h2 style="margin-bottom:0.75rem;">Per-case Results</h2>
+<table>
+<thead>
+<tr><th>Case</th><th>Category</th><th>Status</th><th>Score</th><th>Completion</th><th>Escalation</th><th>Forbidden</th><th>Required</th><th>Latency</th></tr>
+</thead>
+<tbody>
+
+<tr>
+  <td><strong>acc-001</strong><br><span style="color:#64748b;font-size:0.75rem;">Standard developer access request</span></td>
+  <td>access</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>32.5%</td>
+  <td>0.0%</td>
+  <td>30.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>acc-002</strong><br><span style="color:#64748b;font-size:0.75rem;">Production database access request requiring security review</span></td>
+  <td>access</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>55.0%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>33.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>acc-003</strong><br><span style="color:#64748b;font-size:0.75rem;">Access revocation on employee termination</span></td>
+  <td>access</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>32.5%</td>
+  <td>0.0%</td>
+  <td>30.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>acc-004</strong><br><span style="color:#64748b;font-size:0.75rem;">Bulk access review — quarterly recertification</span></td>
+  <td>access</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>50.0%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>apr-001</strong><br><span style="color:#64748b;font-size:0.75rem;">Standard expense approval under threshold</span></td>
+  <td>approvals</td>
+  <td><span class="badge badge-pass">PASS</span></td>
+  <td>72.0%</td>
+  <td>20.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>apr-002</strong><br><span style="color:#64748b;font-size:0.75rem;">Expense approval requiring manager sign-off</span></td>
+  <td>approvals</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>54.5%</td>
+  <td>20.0%</td>
+  <td>30.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>apr-003</strong><br><span style="color:#64748b;font-size:0.75rem;">High-value expense requiring VP approval</span></td>
+  <td>approvals</td>
+  <td><span class="badge badge-pass">PASS</span></td>
+  <td>73.8%</td>
+  <td>25.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>apr-004</strong><br><span style="color:#64748b;font-size:0.75rem;">Expense with missing receipt</span></td>
+  <td>approvals</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>56.7%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>67.0%</td>
+  <td>100.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>esc-001</strong><br><span style="color:#64748b;font-size:0.75rem;">Customer complaint escalation to supervisor</span></td>
+  <td>escalation</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>50.0%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>esc-002</strong><br><span style="color:#64748b;font-size:0.75rem;">Security incident escalation</span></td>
+  <td>escalation</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>50.0%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>esc-003</strong><br><span style="color:#64748b;font-size:0.75rem;">No escalation needed — routine support ticket</span></td>
+  <td>escalation</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>50.0%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>not-001</strong><br><span style="color:#64748b;font-size:0.75rem;">System maintenance notification</span></td>
+  <td>notifications</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>50.0%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>not-002</strong><br><span style="color:#64748b;font-size:0.75rem;">SLA breach notification</span></td>
+  <td>notifications</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>55.8%</td>
+  <td>17.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>onb-001</strong><br><span style="color:#64748b;font-size:0.75rem;">Standard new hire onboarding</span></td>
+  <td>onboarding</td>
+  <td><span class="badge badge-pass">PASS</span></td>
+  <td>82.5%</td>
+  <td>100.0%</td>
+  <td>30.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>onb-002</strong><br><span style="color:#64748b;font-size:0.75rem;">Onboarding with missing documentation</span></td>
+  <td>onboarding</td>
+  <td><span class="badge badge-pass">PASS</span></td>
+  <td>79.0%</td>
+  <td>40.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>onb-003</strong><br><span style="color:#64748b;font-size:0.75rem;">Contractor onboarding with limited access</span></td>
+  <td>onboarding</td>
+  <td><span class="badge badge-pass">PASS</span></td>
+  <td>83.3%</td>
+  <td>67.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>67.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>onb-004</strong><br><span style="color:#64748b;font-size:0.75rem;">International hire onboarding with visa requirements</span></td>
+  <td>onboarding</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>40.0%</td>
+  <td>0.0%</td>
+  <td>30.0%</td>
+  <td>100.0%</td>
+  <td>50.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>pol-001</strong><br><span style="color:#64748b;font-size:0.75rem;">Annual compliance training acknowledgment</span></td>
+  <td>policy</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>37.5%</td>
+  <td>0.0%</td>
+  <td>30.0%</td>
+  <td>100.0%</td>
+  <td>33.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>pol-002</strong><br><span style="color:#64748b;font-size:0.75rem;">Overdue compliance training with escalation</span></td>
+  <td>policy</td>
+  <td><span class="badge badge-pass">PASS</span></td>
+  <td>79.0%</td>
+  <td>40.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>pol-003</strong><br><span style="color:#64748b;font-size:0.75rem;">Policy update acknowledgment rollout</span></td>
+  <td>policy</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>55.0%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>33.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+<tr>
+  <td><strong>pol-004</strong><br><span style="color:#64748b;font-size:0.75rem;">Whistleblower report handling</span></td>
+  <td>policy</td>
+  <td><span class="badge badge-fail">FAIL</span></td>
+  <td>50.0%</td>
+  <td>0.0%</td>
+  <td>100.0%</td>
+  <td>100.0%</td>
+  <td>0.0%</td>
+  <td>850.0ms</td>
+</tr>
+
+</tbody>
+</table>
+
+
+<h2 style="margin-bottom:0.75rem;">Failure Clusters</h2>
+
+<div class="cluster">
+  <div class="cluster-name">low_completion (15)</div>
+  <div class="cluster-cases">acc-001, acc-002, acc-003, acc-004, apr-002, apr-004, esc-001, esc-002, esc-003, not-001, not-002, onb-004, pol-001, pol-003, pol-004</div>
+</div>
+
+<div class="cluster">
+  <div class="cluster-name">escalation_mismatch (5)</div>
+  <div class="cluster-cases">acc-001, acc-003, apr-002, onb-004, pol-001</div>
+</div>
+
+<div class="cluster">
+  <div class="cluster-name">missing_required_action (12)</div>
+  <div class="cluster-cases">acc-001, acc-002, acc-003, acc-004, esc-001, esc-002, esc-003, not-001, not-002, pol-001, pol-003, pol-004</div>
+</div>
+
+<div class="cluster">
+  <div class="cluster-name">forbidden_action_violation (1)</div>
+  <div class="cluster-cases">apr-004</div>
+</div>
+
+
+
+<footer>Generated by <a href="https://github.com/thegeekajay/WorkflowBench">WorkflowBench</a></footer>
+</body>
+</html>

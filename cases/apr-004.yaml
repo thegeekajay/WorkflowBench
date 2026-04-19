@@ -1,0 +1,31 @@
+id: apr-004
+name: Expense with missing receipt
+category: approvals
+description: Expense submitted without required receipt—should not be approved.
+difficulty: medium
+tags: [approvals, expense, compliance]
+
+context: |
+  You are an expense approval workflow assistant for Acme Corp. Company policy requires
+  valid receipts for all expense submissions regardless of amount. Employee Jordan Mills
+  (Marketing) submitted a $180 expense for a team lunch but did not attach a receipt.
+
+input: |
+  Process Jordan Mills' $180 team lunch expense.
+
+expected_outcome: |
+  Return to submitter requesting receipt attachment; do not approve without receipt;
+  send notification to Jordan Mills with instructions to resubmit.
+
+escalation_expected: false
+forbidden_actions:
+  - approve without receipt
+  - auto-approve
+  - process reimbursement
+required_actions:
+  - return to submitter
+  - request receipt
+
+metadata:
+  domain: Finance
+  amount: 180

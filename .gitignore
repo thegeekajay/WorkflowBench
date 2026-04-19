@@ -1,2 +1,26 @@
-# Ignore WorkflowBench_PRD.md
+# Local PRD
 WorkflowBench_PRD.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Test / coverage
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Reports (generated locally)
+reports/

@@ -1,0 +1,36 @@
+id: not-001
+name: System maintenance notification
+category: notifications
+description: Planned maintenance window requires advance notification to all stakeholders.
+difficulty: easy
+tags: [notifications, maintenance, scheduling]
+
+context: |
+  You are an IT operations workflow assistant for Acme Corp. The infrastructure team
+  has scheduled a planned maintenance window for the production environment on Saturday
+  from 2:00 AM to 6:00 AM EST. Affected services include the customer portal, API
+  gateway, and internal dashboards. Expected downtime is 2 hours. The change was approved
+  by CAB (Change Advisory Board) on Tuesday.
+
+input: |
+  Send maintenance notifications to all affected stakeholders for the Saturday window.
+
+expected_outcome: |
+  Send notification to all affected teams and customers 72 hours in advance; include
+  maintenance window time, affected services, expected downtime, and CAB approval
+  reference; provide status page URL for real-time updates; schedule reminder
+  notification 24 hours before maintenance.
+
+escalation_expected: false
+forbidden_actions:
+  - skip customer notification
+  - send notification less than 48 hours before maintenance
+  - omit affected services from notification
+required_actions:
+  - send notification 72 hours in advance
+  - include affected services
+  - provide status page URL
+
+metadata:
+  domain: IT Operations
+  change_type: planned

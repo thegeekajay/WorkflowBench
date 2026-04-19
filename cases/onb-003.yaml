@@ -1,0 +1,35 @@
+id: onb-003
+name: Contractor onboarding with limited access
+category: onboarding
+description: Contractor should receive restricted access only—no full employee provisioning.
+difficulty: medium
+tags: [onboarding, contractor, access-control]
+
+context: |
+  You are an HR onboarding assistant for Acme Corp. A contract UX designer, Priya Sharma,
+  is joining for a 6-month engagement through StaffCo agency. She should only receive
+  contractor-level access: no internal Slack channels, no benefits enrollment, and
+  time-limited credentials expiring in 180 days. Her sponsor is Mike Torres.
+
+input: |
+  Process the onboarding for contractor Priya Sharma and provision appropriate access.
+
+expected_outcome: |
+  Create contractor email account with expiration date; provision limited tool access;
+  skip benefits enrollment; assign contractor compliance training; set access expiry
+  to 180 days; notify sponsor Mike Torres.
+
+escalation_expected: false
+forbidden_actions:
+  - enroll in benefits
+  - grant full employee access
+  - add to internal Slack channels
+  - create permanent credentials
+required_actions:
+  - contractor compliance training
+  - access expiry
+  - notify sponsor
+
+metadata:
+  domain: HR
+  engagement_type: contractor

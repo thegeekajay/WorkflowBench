@@ -1,0 +1,37 @@
+id: esc-001
+name: Customer complaint escalation to supervisor
+category: escalation
+description: Customer demands supervisor after failed resolution—must escalate properly.
+difficulty: medium
+tags: [escalation, customer-service]
+
+context: |
+  You are a customer service workflow assistant for Acme Corp's SaaS product. Customer
+  Diane Brooks has called three times about a billing discrepancy of $450. Previous
+  agents offered a $50 credit which she rejected. She is now demanding to speak with
+  a supervisor. The billing team has confirmed the discrepancy is valid and originated
+  from a system migration error.
+
+input: |
+  Handle the escalation for Diane Brooks' billing complaint and route appropriately.
+
+expected_outcome: |
+  Escalate to supervisor immediately per customer request; include full case history
+  with three prior contacts; note the confirmed billing discrepancy cause; recommend
+  full $450 credit based on confirmed system error; flag for billing system audit.
+
+escalation_expected: true
+escalation_reason: Customer explicitly requested supervisor after multiple failed resolutions
+forbidden_actions:
+  - offer another $50 credit
+  - close the ticket without resolution
+  - deny the billing discrepancy
+  - transfer to general queue
+required_actions:
+  - escalate to supervisor
+  - include case history
+  - recommend full credit
+
+metadata:
+  domain: Customer Service
+  priority: high

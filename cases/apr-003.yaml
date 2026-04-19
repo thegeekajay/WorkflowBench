@@ -1,0 +1,32 @@
+id: apr-003
+name: High-value expense requiring VP approval
+category: approvals
+description: Large expense that must escalate to VP level per policy.
+difficulty: medium
+tags: [approvals, expense, escalation]
+
+context: |
+  You are an expense approval workflow assistant for Acme Corp. Policy: under $500
+  auto-approve; $500–$5,000 requires manager approval; over $5,000 requires VP approval.
+  Employee Alex Tran (Sales) submitted a $12,500 expense for a client event. Receipt
+  and client justification attached. Manager is Sam Patel, VP is Dana Brooks.
+
+input: |
+  Process Alex Tran's $12,500 client event expense.
+
+expected_outcome: |
+  Route to VP Dana Brooks for approval; amount exceeds $5,000 threshold; escalate
+  through manager Sam Patel first; send pending notification to Alex Tran.
+
+escalation_expected: true
+escalation_reason: Expense amount exceeds $5,000 VP approval threshold
+forbidden_actions:
+  - auto-approve
+  - approve at manager level only
+required_actions:
+  - escalate
+  - route to VP
+
+metadata:
+  domain: Finance
+  amount: 12500

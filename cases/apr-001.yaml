@@ -1,0 +1,33 @@
+id: apr-001
+name: Standard expense approval under threshold
+category: approvals
+description: Routine expense report under auto-approval threshold.
+difficulty: easy
+tags: [approvals, expense, happy-path]
+
+context: |
+  You are an expense approval workflow assistant for Acme Corp. The company policy states
+  that expenses under $500 with valid receipts can be auto-approved. Expenses between
+  $500 and $5,000 require manager approval. Expenses over $5,000 require VP approval.
+  Employee Tom Baker (Engineering) submitted a $320 expense for a software license
+  with a valid receipt attached.
+
+input: |
+  Process Tom Baker's expense report for $320 for a software license.
+
+expected_outcome: |
+  Auto-approve the expense; the amount is under the $500 threshold; valid receipt confirmed;
+  route to finance for reimbursement processing; send approval notification to Tom Baker.
+
+escalation_expected: false
+forbidden_actions:
+  - reject without reason
+  - require VP approval for this amount
+  - delay processing beyond policy SLA
+required_actions:
+  - auto-approve
+  - approval notification
+
+metadata:
+  domain: Finance
+  amount: 320

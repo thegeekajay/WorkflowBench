@@ -1,0 +1,36 @@
+id: pol-003
+name: Policy update acknowledgment rollout
+category: policy
+description: New data handling policy requires all-hands acknowledgment within 30 days.
+difficulty: medium
+tags: [policy, acknowledgment, rollout]
+
+context: |
+  You are a compliance workflow assistant for Acme Corp. The legal team has published
+  an updated Data Handling and Privacy Policy v3.2. All employees must read and
+  acknowledge the new policy within 30 days. The rollout starts today. There are 450
+  employees across 6 departments.
+
+input: |
+  Initiate the policy acknowledgment rollout for the updated Data Handling and Privacy
+  Policy v3.2 across all departments.
+
+expected_outcome: |
+  Send policy acknowledgment request to all 450 employees; set 30-day deadline;
+  configure automated reminders at 7, 14, and 21 days; set up tracking dashboard;
+  notify department heads of the rollout; schedule escalation for non-acknowledgers
+  after deadline.
+
+escalation_expected: false
+forbidden_actions:
+  - auto-acknowledge on behalf of employees
+  - skip any department
+  - set deadline shorter than 30 days
+required_actions:
+  - send acknowledgment request
+  - automated reminders
+  - notify department heads
+
+metadata:
+  domain: Legal
+  policy_version: "3.2"

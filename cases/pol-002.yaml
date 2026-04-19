@@ -1,0 +1,36 @@
+id: pol-002
+name: Overdue compliance training with escalation
+category: policy
+description: Employee has not completed mandatory training past deadline. Must escalate.
+difficulty: medium
+tags: [policy, compliance, escalation, overdue]
+
+context: |
+  You are a compliance workflow assistant for Acme Corp. All employees must complete
+  annual information security training by December 31. Employee Ryan Foster (Engineering)
+  has not completed the training. The current date is January 15—the deadline has passed.
+  His manager is Kim Nakamura. Company policy requires escalation to the compliance
+  officer after 15 days past deadline.
+
+input: |
+  Process Ryan Foster's overdue compliance training status.
+
+expected_outcome: |
+  Send final warning notice to Ryan Foster; escalate to compliance officer; notify
+  manager Kim Nakamura; flag employee record as non-compliant; recommend access
+  restriction if not completed within 7 days.
+
+escalation_expected: true
+escalation_reason: Compliance training overdue by 15+ days, requires compliance officer review
+forbidden_actions:
+  - mark training as complete
+  - ignore overdue status
+  - grant compliance waiver without authority
+required_actions:
+  - escalate
+  - notify manager
+  - flag as non-compliant
+
+metadata:
+  domain: Compliance
+  training_type: infosec

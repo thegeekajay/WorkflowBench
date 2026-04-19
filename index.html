@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkflowBench — Test AI Workflows Before They Break in Production</title>
+    <meta name="description" content="Lightweight open-source benchmark harness for AI-driven business workflows. YAML scenarios, deterministic scoring, shareable reports.">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --accent-light: #eff6ff;
+            --pass: #22c55e;
+            --fail: #ef4444;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; color: var(--text); line-height: 1.6; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Hero */
+        .hero { background: var(--primary); color: #fff; padding: 5rem 2rem 4rem; text-align: center; }
+        .hero h1 { font-size: 2.75rem; font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+        .hero .tagline { font-size: 1.25rem; color: #94a3b8; max-width: 640px; margin: 0 auto 2rem; }
+        .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 1rem; transition: opacity 0.15s; }
+        .btn:hover { opacity: 0.9; text-decoration: none; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-secondary { background: transparent; color: #fff; border: 1px solid #475569; }
+
+        /* Sections */
+        .section { padding: 4rem 2rem; max-width: 960px; margin: 0 auto; }
+        .section-alt { background: var(--bg-alt); }
+        .section h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
+        .section .subtitle { color: var(--text-muted); text-align: center; max-width: 600px; margin: 0 auto 2.5rem; }
+
+        /* How it works */
+        .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
+        .flow-step { text-align: center; padding: 1.5rem 1rem; }
+        .flow-step .step-num { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 0.75rem; }
+        .flow-step h3 { font-size: 1rem; margin-bottom: 0.375rem; }
+        .flow-step p { font-size: 0.875rem; color: var(--text-muted); }
+
+        /* Features */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+        .feature-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+        .feature-card h3 { font-size: 1.05rem; margin-bottom: 0.375rem; }
+        .feature-card p { font-size: 0.875rem; color: var(--text-muted); }
+
+        /* Code block */
+        .code-block { background: var(--primary); color: #e2e8f0; border-radius: 10px; padding: 1.5rem 2rem; overflow-x: auto; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8125rem; line-height: 1.7; max-width: 720px; margin: 0 auto; }
+        .code-block .comment { color: #64748b; }
+        .code-block .keyword { color: #7dd3fc; }
+        .code-block .string { color: #86efac; }
+
+        /* Scoring */
+        .score-table { width: 100%; border-collapse: collapse; max-width: 640px; margin: 0 auto; }
+        .score-table th, .score-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+        .score-table th { font-weight: 600; background: var(--bg-alt); }
+
+        /* Categories */
+        .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; text-align: center; }
+        .cat-card { background: var(--accent-light); border-radius: 8px; padding: 1.25rem 0.75rem; }
+        .cat-card .count { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+        .cat-card .label { font-size: 0.8125rem; color: var(--text-muted); }
+
+        /* CTA */
+        .cta { background: var(--primary); color: #fff; padding: 4rem 2rem; text-align: center; }
+        .cta h2 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+        .cta p { color: #94a3b8; margin-bottom: 1.5rem; }
+
+        /* Footer */
+        footer { padding: 2rem; text-align: center; font-size: 0.8125rem; color: var(--text-muted); border-top: 1px solid var(--border); }
+
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 2rem; }
+            .hero .tagline { font-size: 1.05rem; }
+            .section { padding: 3rem 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+    <h1>WorkflowBench</h1>
+    <p class="tagline">Test AI-driven business workflows before they break in production. YAML scenarios, deterministic scoring, shareable reports.</p>
+    <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/thegeekajay/WorkflowBench">View on GitHub</a>
+        <a class="btn btn-secondary" href="https://github.com/thegeekajay/WorkflowBench#quick-start">Quick Start</a>
+    </div>
+</section>
+
+<!-- How it works -->
+<section class="section">
+    <h2>How It Works</h2>
+    <p class="subtitle">Define scenarios. Run your AI. Score the results. Ship with confidence.</p>
+    <div class="flow">
+        <div class="flow-step">
+            <div class="step-num">1</div>
+            <h3>Define Cases</h3>
+            <p>Write YAML scenarios covering onboarding, approvals, access, escalation, and more.</p>
+        </div>
+        <div class="flow-step">
+            <div class="step-num">2</div>
+            <h3>Run Benchmark</h3>
+            <p>Point the CLI at your model or agent. One command runs the full suite.</p>
+        </div>
+        <div class="flow-step">
+            <div class="step-num">3</div>
+            <h3>Score Results</h3>
+            <p>Deterministic scorers evaluate correctness, escalation, compliance, latency, and cost.</p>
+        </div>
+        <div class="flow-step">
+            <div class="step-num">4</div>
+            <h3>Share Report</h3>
+            <p>Get HTML and markdown reports with failure clusters to share with your team.</p>
+        </div>
+        <div class="flow-step">
+            <div class="step-num">5</div>
+            <h3>Compare Runs</h3>
+            <p>Diff benchmark runs to catch regressions before you deploy.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<div class="section-alt">
+<section class="section">
+    <h2>Built for Production Teams</h2>
+    <p class="subtitle">Everything you need to benchmark AI workflows without building a research platform.</p>
+    <div class="features-grid">
+        <div class="feature-card">
+            <h3>YAML Case Format</h3>
+            <p>Structured scenarios with context, inputs, expected outcomes, escalation rules, and forbidden actions. Easy to write, review, and version.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Deterministic Scoring</h3>
+            <p>Four scoring dimensions — completion, escalation correctness, forbidden action violations, and required actions — with clear pass/fail criteria.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Provider Agnostic</h3>
+            <p>Built-in adapters for OpenAI and Anthropic. Simple interface to plug in any model, agent, or custom workflow engine.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Failure Clusters</h3>
+            <p>Reports don't just show a score — they group failures by type so you can see systemic issues at a glance.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Comparison Mode</h3>
+            <p>Diff two runs to detect regressions and improvements. Know exactly which cases changed before you ship.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Local-First</h3>
+            <p>No hosted service required. Run benchmarks from your terminal, store results in your repo, own your data.</p>
+        </div>
+    </div>
+</section>
+</div>
+
+<!-- Quick start -->
+<section class="section">
+    <h2>Get Started in 60 Seconds</h2>
+    <p class="subtitle">Install, run, and get a report — no configuration needed.</p>
+    <div class="code-block">
+        <span class="comment"># Install</span><br>
+        pip install -e ".[dev]"<br><br>
+        <span class="comment"># Run with the built-in echo adapter (no API key needed)</span><br>
+        workflowbench run cases/ --adapter echo<br><br>
+        <span class="comment"># Or use OpenAI / Anthropic</span><br>
+        workflowbench run cases/ --adapter openai --model gpt-4o<br><br>
+        <span class="comment"># Compare two runs</span><br>
+        workflowbench compare reports/run_A.json reports/run_B.json
+    </div>
+</section>
+
+<!-- Scoring -->
+<div class="section-alt">
+<section class="section">
+    <h2>Scoring System</h2>
+    <p class="subtitle">Transparent, deterministic, and weighted for enterprise workflows.</p>
+    <table class="score-table">
+        <thead>
+            <tr><th>Dimension</th><th>Weight</th><th>What It Checks</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Completion</strong></td><td>35%</td><td>Expected outcome phrases found in the response</td></tr>
+            <tr><td><strong>Escalation</strong></td><td>25%</td><td>Correct escalation or non-escalation behavior</td></tr>
+            <tr><td><strong>Forbidden Actions</strong></td><td>25%</td><td>No forbidden actions appear in the response</td></tr>
+            <tr><td><strong>Required Actions</strong></td><td>15%</td><td>All required actions present in the response</td></tr>
+        </tbody>
+    </table>
+</section>
+</div>
+
+<!-- Sample cases -->
+<section class="section">
+    <h2>20 Enterprise Scenarios Included</h2>
+    <p class="subtitle">Real workflow patterns across six categories. Ready to run out of the box.</p>
+    <div class="categories">
+        <div class="cat-card"><div class="count">4</div><div class="label">Onboarding</div></div>
+        <div class="cat-card"><div class="count">4</div><div class="label">Approvals</div></div>
+        <div class="cat-card"><div class="count">4</div><div class="label">Policy</div></div>
+        <div class="cat-card"><div class="count">4</div><div class="label">Access</div></div>
+        <div class="cat-card"><div class="count">3</div><div class="label">Escalation</div></div>
+        <div class="cat-card"><div class="count">2</div><div class="label">Notifications</div></div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <h2>From Demo Success to Production Confidence</h2>
+    <p>Stop shipping AI workflows based on vibes. Start benchmarking.</p>
+    <a class="btn btn-primary" href="https://github.com/thegeekajay/WorkflowBench">Get Started on GitHub</a>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2026 WorkflowBench &middot; MIT License &middot; Built by <a href="https://github.com/thegeekajay">thegeekajay</a></p>
+</footer>
+
+</body>
+</html>

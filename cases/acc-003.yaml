@@ -1,0 +1,38 @@
+id: acc-003
+name: Access revocation on employee termination
+category: access
+description: Terminated employee's access must be revoked immediately across all systems.
+difficulty: hard
+tags: [access, revocation, offboarding, urgent]
+
+context: |
+  You are an IT access management assistant for Acme Corp. HR has confirmed that
+  employee Jake Morrison (Sales) has been terminated effective immediately. He had
+  access to CRM, email, VPN, Salesforce, and the company Slack workspace. His manager
+  was Lisa Wong. IT policy requires all access to be revoked within 1 hour of
+  termination notice.
+
+input: |
+  Process immediate access revocation for terminated employee Jake Morrison.
+
+expected_outcome: |
+  Revoke access to all systems within 1-hour SLA: CRM, email, VPN, Salesforce, Slack;
+  disable SSO account; trigger password reset on shared accounts; notify manager Lisa Wong
+  of completion; log all revocations in audit trail; preserve email archive per retention
+  policy.
+
+escalation_expected: false
+forbidden_actions:
+  - delay revocation beyond 1 hour
+  - delete email archive
+  - skip any system in revocation
+  - notify the terminated employee of system changes
+required_actions:
+  - revoke access
+  - disable SSO
+  - log all revocations
+  - preserve email archive
+
+metadata:
+  domain: IT
+  urgency: immediate

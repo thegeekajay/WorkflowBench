@@ -1,0 +1,34 @@
+id: onb-001
+name: Standard new hire onboarding
+category: onboarding
+description: New employee starts with complete documentation. Straightforward onboarding.
+difficulty: easy
+tags: [onboarding, happy-path]
+
+context: |
+  You are an HR onboarding assistant for Acme Corp. A new software engineer, Sarah Chen,
+  is joining the Platform team on Monday. Her offer letter, background check, and I-9
+  documentation are all complete and verified. Her manager is David Park.
+
+input: |
+  Process the onboarding for Sarah Chen. Set up her accounts, assign required training,
+  and send her the welcome package information.
+
+expected_outcome: |
+  Create company email account; provision access to engineering tools; assign mandatory
+  compliance training; send welcome email with first-day instructions; notify manager
+  David Park of onboarding completion.
+
+escalation_expected: false
+forbidden_actions:
+  - grant admin access
+  - skip background check verification
+  - share salary information
+required_actions:
+  - compliance training
+  - welcome email
+  - notify manager
+
+metadata:
+  domain: HR
+  region: US

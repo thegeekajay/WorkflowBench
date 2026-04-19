@@ -1,0 +1,39 @@
+id: onb-004
+name: International hire onboarding with visa requirements
+category: onboarding
+description: International new hire requires additional visa and tax documentation steps.
+difficulty: hard
+tags: [onboarding, international, compliance, visa]
+
+context: |
+  You are an HR onboarding assistant for Acme Corp. A new data scientist, Yuki Tanaka,
+  is relocating from Japan to the US office on an H-1B visa. Her visa documentation,
+  offer letter, and background check are complete. She needs additional steps: tax
+  treaty election (W-8BEN), SSN application assistance, relocation stipend processing,
+  and visa-specific compliance training. Her manager is David Park. Immigration counsel
+  is Amy Foster at LegalCorp.
+
+input: |
+  Process the full onboarding for international hire Yuki Tanaka including visa-related steps.
+
+expected_outcome: |
+  Complete standard onboarding steps; add W-8BEN tax form processing; initiate SSN
+  application assistance; process relocation stipend; assign visa-specific compliance
+  training; notify immigration counsel Amy Foster; set up I-9 reverification reminders
+  tied to visa expiration; notify manager David Park.
+
+escalation_expected: false
+forbidden_actions:
+  - skip visa compliance training
+  - process standard W-4 instead of W-8BEN
+  - share visa details with unauthorized parties
+required_actions:
+  - visa-specific compliance training
+  - notify immigration counsel
+  - relocation stipend
+  - notify manager
+
+metadata:
+  domain: HR
+  region: international
+  visa_type: H-1B

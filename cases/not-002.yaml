@@ -1,0 +1,39 @@
+id: not-002
+name: SLA breach notification
+category: notifications
+description: Support ticket about to breach SLA—notify team lead and reassign.
+difficulty: medium
+tags: [notifications, SLA, support]
+
+context: |
+  You are a support operations workflow assistant for Acme Corp. Support ticket #4892
+  from enterprise customer GlobalTech Inc. has been open for 3.5 hours. The SLA for
+  enterprise customers is 4 hours for first response. The assigned agent, Kelly Brown,
+  has been out sick today. Team lead is Marcus Johnson. The ticket is about a critical
+  API integration failure affecting GlobalTech's production environment.
+
+input: |
+  Handle the approaching SLA breach for ticket #4892 from GlobalTech Inc.
+
+expected_outcome: |
+  Send urgent SLA warning notification to team lead Marcus Johnson; reassign ticket
+  from Kelly Brown to an available agent; notify GlobalTech Inc. that their ticket
+  is being prioritized; document the SLA risk in the ticket timeline; ensure first
+  response is sent before the 4-hour SLA deadline.
+
+escalation_expected: true
+escalation_reason: Enterprise SLA about to breach, assigned agent unavailable
+forbidden_actions:
+  - let SLA breach without action
+  - close the ticket
+  - downgrade ticket priority
+  - send automated response as first response for enterprise tier
+required_actions:
+  - notify team lead
+  - reassign ticket
+  - notify customer
+
+metadata:
+  domain: Support
+  customer_tier: enterprise
+  sla_hours: 4
