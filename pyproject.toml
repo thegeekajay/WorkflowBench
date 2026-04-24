@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "workflowbench"
-version = "0.1.1"
+version = "0.1.2"
 description = "Lightweight benchmark harness for AI-driven business workflows"
 readme = "README.md"
 license = "MIT"
@@ -40,7 +40,8 @@ dev = [
 workflowbench = "workflowbench.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/thegeekajay/WorkflowBench"
+Homepage = "https://workflowbench.theajaykumar.com/"
+Documentation = "https://workflowbench.theajaykumar.com/"
 Repository = "https://github.com/thegeekajay/WorkflowBench"
 Issues = "https://github.com/thegeekajay/WorkflowBench/issues"
 

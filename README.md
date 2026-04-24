@@ -1,7 +1,4 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/workflowbench_logo_dark.svg">
-  <img alt="WorkflowBench" src="assets/workflowbench_logo_primary.svg" height="60">
-</picture>
+<img alt="WorkflowBench" src="https://raw.githubusercontent.com/thegeekajay/WorkflowBench/main/assets/workflowbench_logo_primary.png" height="60">
 
 # WorkflowBench
 
@@ -9,9 +6,9 @@
 
 WorkflowBench is a lightweight, open-source benchmark harness for AI-driven business workflows. Define realistic scenarios in YAML-onboarding, approvals, policy acknowledgment, access requests, escalation handling-then run prompts or agents against them and get deterministic scores for correctness, escalation behavior, compliance, latency, and cost.
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/thegeekajay/WorkflowBench/blob/main/LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
-[![Docs](https://img.shields.io/badge/docs-docs.html-informational)](docs.html)
+[![Docs](https://img.shields.io/badge/docs-website-informational)](https://workflowbench.theajaykumar.com/)
 
 ---
 
@@ -295,7 +292,7 @@ python3 -m ruff check workflowbench/
 
 ## Documentation
 
-Full developer documentation is available at [docs.html](docs.html), including:
+Full developer documentation is available at [workflowbench.theajaykumar.com](https://workflowbench.theajaykumar.com/), including:
 - Complete CLI reference
 - Case schema specification
 - Scorer internals and custom scorer guide
@@ -307,7 +304,7 @@ Full developer documentation is available at [docs.html](docs.html), including:
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
+See [CHANGELOG.md](https://github.com/thegeekajay/WorkflowBench/blob/main/CHANGELOG.md) for version history and release notes.
 
 ---
 

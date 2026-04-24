@@ -13,6 +13,16 @@ Changes staged for the next release will appear here.
 
 ---
 
+## [0.1.2] - 2026-04-24
+
+### Changed
+
+- Updated `README.md` to use absolute logo and documentation links so package description rendering works on PyPI and GitHub.
+- Updated package metadata URLs (`Homepage`, `Documentation`) to point to `https://workflowbench.theajaykumar.com/`.
+- Updated publish workflow to set `skip-existing: true` for both TestPyPI and PyPI publish jobs, so reruns do not fail when files already exist.
+
+---
+
 ## [0.1.0] - 2026-04-19
 
 Initial public release of WorkflowBench.
@@ -99,5 +109,6 @@ Initial public release of WorkflowBench.
 - [Documentation](docs.html)
 - [Issues](https://github.com/thegeekajay/WorkflowBench/issues)
 
-[Unreleased]: https://github.com/thegeekajay/WorkflowBench/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/thegeekajay/WorkflowBench/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/thegeekajay/WorkflowBench/releases/tag/v0.1.2
 [0.1.0]: https://github.com/thegeekajay/WorkflowBench/releases/tag/v0.1.0
